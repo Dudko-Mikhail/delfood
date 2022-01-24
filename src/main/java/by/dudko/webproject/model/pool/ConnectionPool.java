@@ -98,7 +98,7 @@ public class ConnectionPool {
             try {
                 freeConnections.add(new ProxyConnection(DriverManager.getConnection(URL, USER_NAME, PASSWORD)));
             } catch (SQLException e) {
-                logger.error("Problems creating a connection", e);
+                logger.error("Failed to create connection", e);
             }
         }
     }
