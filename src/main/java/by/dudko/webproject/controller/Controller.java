@@ -2,17 +2,21 @@ package by.dudko.webproject.controller;
 
 import by.dudko.webproject.controller.command.Command;
 import by.dudko.webproject.controller.command.CommandType;
+import by.dudko.webproject.exception.CommandException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.util.Optional;
 
 @WebServlet(name = "mainServlet", urlPatterns = {"/controller"})
 public class Controller extends HttpServlet {
+    private static final Logger logger = LogManager.getLogger();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -27,20 +31,28 @@ public class Controller extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         String commandText = request.getParameter(RequestParameter.COMMAND);
         Optional<Command> command = CommandType.parseCommand(commandText);
-        if (command.isPresent()) {
-           Router router = command.get().execute(request);
-           String pagePath = router.getPagePath();
-           if (router.getRouteType() == Router.RouteType.FORWARD) {
-               request.getRequestDispatcher(pagePath).forward(request, response);
-           }
-           else {
-               response.sendRedirect(pagePath);
-           }
+        if (command.isEmpty()) {
+            response.sendError(HttpServletResponse.SC_NOT_FOUND);
+            return;
         }
-        else { // todo Что делать, если нет команды
-            var session = request.getSession();
-            response.sendRedirect((String) session.getAttribute(SessionAttributes.PAGE));
+
+        try {
+            Router router = command.get().execute(request);
+            String pagePath = router.getPagePath();
+            if (router.getRouteType() == Router.RouteType.FORWARD) {
+                request.getRequestDispatcher(pagePath).forward(request, response);
+            } else {
+                pagePath = addContextPath(request, router.getPagePath());
+                response.sendRedirect(pagePath);
+            }
+        } catch (CommandException e) {
+            logger.error("Exception during command execution", e);
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
     }
 
+    private String addContextPath(HttpServletRequest request, String url) {
+        String context = request.getContextPath();
+        return String.format("%s/%s", context, url);
+    }
 }

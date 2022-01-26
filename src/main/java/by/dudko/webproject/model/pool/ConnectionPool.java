@@ -29,7 +29,7 @@ public class ConnectionPool {
     private final BlockingQueue<ProxyConnection> givenAwayConnections;
 
     static {
-        ResourceBundle bundle = ResourceBundle.getBundle("database");
+        ResourceBundle bundle = ResourceBundle.getBundle("config/database");
         USER_NAME = bundle.getString("db.userName");
         PASSWORD = bundle.getString("db.password");
         DRIVER = bundle.getString("db.driver");
