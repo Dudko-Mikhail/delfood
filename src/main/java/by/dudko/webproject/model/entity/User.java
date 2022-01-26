@@ -1,7 +1,16 @@
 package by.dudko.webproject.model.entity;
 
 public class User extends RootEntity {
+    public enum Status {
+        UNCONFIRMED, ACTIVE, BLOCKED
+    }
+
+    public enum Role {
+        ADMIN, CLIENT, GUEST
+    }
+
     private Role role;
+    private Status status;
     private String email;
     private String login;
     private String password;
@@ -13,7 +22,9 @@ public class User extends RootEntity {
         return new UserBuilder();
     }
 
-    public User() { // todo think about constructors and explore other people implementations
+    public User() {
+        role = Role.GUEST;
+        status = Status.UNCONFIRMED;
     }
 
     public Role getRole() {
@@ -22,6 +33,14 @@ public class User extends RootEntity {
 
     public void setRole(Role role) {
         this.role = role;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
     }
 
     public String getEmail() {
@@ -81,6 +100,11 @@ public class User extends RootEntity {
 
         public UserBuilder id(long id) {
             user.setId(id);
+            return this;
+        }
+
+        public UserBuilder status(Status status) {
+            user.setStatus(status);
             return this;
         }
 
@@ -147,6 +171,7 @@ public class User extends RootEntity {
         User user = (User) o;
 
         if (role != user.role) return false;
+        if (status != user.status) return false;
         if (email != null ? !email.equals(user.email) : user.email != null) return false;
         if (login != null ? !login.equals(user.login) : user.login != null) return false;
         if (password != null ? !password.equals(user.password) : user.password != null) return false;
@@ -159,6 +184,7 @@ public class User extends RootEntity {
     public int hashCode() {
         int result = super.hashCode();
         result = 31 * result + (role != null ? role.hashCode() : 0);
+        result = 31 * result + (status != null ? status.hashCode() : 0);
         result = 31 * result + (email != null ? email.hashCode() : 0);
         result = 31 * result + (login != null ? login.hashCode() : 0);
         result = 31 * result + (password != null ? password.hashCode() : 0);
@@ -172,11 +198,12 @@ public class User extends RootEntity {
     public String toString() {
         final StringBuilder sb = new StringBuilder("User{");
         sb.append("role=").append(role);
+        sb.append(", status=").append(status);
         sb.append(", email='").append(email).append('\'');
         sb.append(", login='").append(login).append('\'');
         sb.append(", password='").append(password).append('\'');
         sb.append(", firstName='").append(firstName).append('\'');
-        sb.append(", secondName='").append(lastName).append('\'');
+        sb.append(", lastName='").append(lastName).append('\'');
         sb.append(", phoneNumber='").append(phoneNumber).append('\'');
         sb.append('}');
         return sb.toString();
