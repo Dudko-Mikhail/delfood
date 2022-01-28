@@ -7,8 +7,6 @@ import org.apache.logging.log4j.Logger;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 public class UserRowMapper implements RowMapper<User> {
@@ -30,7 +28,6 @@ public class UserRowMapper implements RowMapper<User> {
 
     @Override
     public Optional<User> mapRow(ResultSet resultSet) {
-        User user = null;
         try {
             if (resultSet.next()) {
                 User.UserBuilder builder = User.getBuilder();
@@ -45,17 +42,15 @@ public class UserRowMapper implements RowMapper<User> {
                         .firstName(resultSet.getString(FIRST_NAME))
                         .lastName(resultSet.getString(LAST_NAME))
                         .phoneNumber(resultSet.getString(PHONE_NUMBER));
-                user = builder.buildUser();
+                return Optional.of(builder.buildUser());
             }
         } catch (SQLException e) {
             logger.error("User mapping error", e);
-            return Optional.empty();
         }
-        return Optional.ofNullable(user);
+        return Optional.empty();
     }
 
-    private UserRowMapper() {
-    }
+    private UserRowMapper() {}
 }
 
 

@@ -12,16 +12,32 @@ public class DishCategory extends RootEntity {
         this.imageUrl = imageUrl;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
 
-        DishCategory that = (DishCategory) o;
+        DishCategory category = (DishCategory) o;
 
-        if (name != null ? !name.equals(that.name) : that.name != null) return false;
-        return imageUrl != null ? imageUrl.equals(that.imageUrl) : that.imageUrl == null;
+        if (name != null ? !name.equals(category.name) : category.name != null) return false;
+        return imageUrl != null ? imageUrl.equals(category.imageUrl) : category.imageUrl == null;
     }
 
     @Override
