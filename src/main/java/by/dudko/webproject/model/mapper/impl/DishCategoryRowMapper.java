@@ -23,7 +23,7 @@ public class DishCategoryRowMapper implements RowMapper<DishCategory> {
     @Override
     public Optional<DishCategory> mapRow(ResultSet resultSet) {
         try {
-            if (!resultSet.next()) {
+            if (resultSet.next()) {
                 DishCategory category = new DishCategory();
                 category.setId(resultSet.getInt(CATEGORY_ID));
                 category.setImageUrl(resultSet.getString(IMAGE_URL));
