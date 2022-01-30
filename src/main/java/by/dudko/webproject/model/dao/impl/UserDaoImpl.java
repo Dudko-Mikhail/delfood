@@ -5,8 +5,6 @@ import by.dudko.webproject.model.dao.UserDao;
 import by.dudko.webproject.model.entity.User;
 import by.dudko.webproject.model.mapper.impl.UserRowMapper;
 import by.dudko.webproject.model.pool.ConnectionPool;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -14,8 +12,6 @@ import java.util.List;
 import java.util.Optional;
 
 public class UserDaoImpl implements UserDao {
-    private static final ConnectionPool pool = ConnectionPool.getInstance();
-    private static final UserRowMapper userMapper = UserRowMapper.getInstance();
     private static final String SELECT_ALL_USERS = """
             SELECT user_id, roles.name role, status, email, login, password, phone_number, first_name, last_name
             FROM users JOIN user_roles roles
@@ -39,6 +35,12 @@ public class UserDaoImpl implements UserDao {
                        on roles.role_id = users.role_id
             WHERE email = ?
             """;
+    private static final String FIND_USER_BY_LOGIN_OR_EMAIL = """
+            SELECT user_id, roles.name role, status, email, login, password, phone_number, first_name, last_name
+            FROM users JOIN user_roles roles
+                       on roles.role_id = users.role_id
+            WHERE login = ? OR email = ?
+            """;
     private static final String DELETE_USER_BY_ID = """
             DELETE FROM users
             WHERE user_id = ?
@@ -48,6 +50,8 @@ public class UserDaoImpl implements UserDao {
             values (?, ?, ?, ?, ?, ?, ?, ?)
             """;
     private static final UserDaoImpl INSTANCE = new UserDaoImpl();
+    private final ConnectionPool pool = ConnectionPool.getInstance();
+    private final UserRowMapper userMapper = UserRowMapper.getInstance();
 
     public static UserDaoImpl getInstance() {
         return INSTANCE;
@@ -102,6 +106,20 @@ public class UserDaoImpl implements UserDao {
             }
         } catch (SQLException e) {
             throw new DaoException("Failed to find user by email", e);
+        }
+    }
+
+    @Override
+    public Optional<User> findUserByLoginOrEmail(String login, String email) throws DaoException {
+        try (var connection = pool.takeConnection();
+             var preparedStatement = connection.prepareStatement(FIND_USER_BY_LOGIN_OR_EMAIL)) {
+            preparedStatement.setString(1, login);
+            preparedStatement.setString(2, email);
+            try (var resultSet = preparedStatement.executeQuery()) {
+                return userMapper.mapRow(resultSet);
+            }
+        } catch (SQLException e) {
+            throw new DaoException("Failed to find user by login and password", e);
         }
     }
 
