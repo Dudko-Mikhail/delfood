@@ -2,7 +2,7 @@ package by.dudko.webproject.model.entity;
 
 import java.math.BigDecimal;
 
-public class Dish extends RootEntity {
+public class Dish extends RootEntity<Integer> {
     private BigDecimal price;
     private BigDecimal discount;
     private int weight;
@@ -10,6 +10,10 @@ public class Dish extends RootEntity {
     private String name;
     private String description;
     private DishCategory category;
+
+    public static DishBuilder getBuilder() {
+        return new DishBuilder();
+    }
 
     public Dish() {}
 
@@ -67,6 +71,58 @@ public class Dish extends RootEntity {
 
     public void setCategory(DishCategory category) {
         this.category = category;
+    }
+
+    public static class DishBuilder {
+        private final Dish dish;
+
+        DishBuilder() {
+            dish = new Dish();
+        }
+
+        public DishBuilder price(BigDecimal price) {
+            dish.setPrice(price);
+            return this;
+        }
+
+        public DishBuilder discount(BigDecimal discount) {
+            dish.setDiscount(discount);
+            return this;
+        }
+
+        public DishBuilder weight(int weight) {
+            dish.setWeight(weight);
+            return this;
+        }
+
+        public DishBuilder imageUrl(String imageUrl) {
+            dish.setImageUrl(imageUrl);
+            return this;
+        }
+
+        public DishBuilder name(String name) {
+            dish.setName(name);
+            return this;
+        }
+
+        public DishBuilder description(String description) {
+            dish.setDescription(description);
+            return this;
+        }
+
+        public DishBuilder category(DishCategory category) {
+            dish.setCategory(category);
+            return this;
+        }
+
+        public DishBuilder id(Integer id) {
+            dish.setId(id);
+            return this;
+        }
+
+        public Dish buildDish() {
+            return dish;
+        }
     }
 
     @Override

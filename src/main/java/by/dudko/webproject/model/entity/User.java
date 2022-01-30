@@ -1,6 +1,6 @@
 package by.dudko.webproject.model.entity;
 
-public class User extends RootEntity {
+public class User extends RootEntity<Long> {
     public enum Status {
         UNCONFIRMED, ACTIVE, BLOCKED
     }

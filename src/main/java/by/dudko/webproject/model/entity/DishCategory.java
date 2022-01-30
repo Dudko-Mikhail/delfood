@@ -1,12 +1,12 @@
 package by.dudko.webproject.model.entity;
 
-public class DishCategory extends RootEntity {
+public class DishCategory extends RootEntity<Integer> {
     private String name;
     private String imageUrl;
 
     public DishCategory() {}
 
-    public DishCategory(long id, String name, String imageUrl) {
+    public DishCategory(int id, String name, String imageUrl) {
         super(id);
         this.name = name;
         this.imageUrl = imageUrl;

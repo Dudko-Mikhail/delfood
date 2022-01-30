@@ -7,15 +7,19 @@
     <title>Home</title>
 </head>
 <body>
-<header>
-    <jsp:include page="common/header.jsp"/>
-</header>
-<ul>
-    <li><a href="${pageContext.request.contextPath}/jsp/sign_in.jsp">Sign In</a></li>
-    <li><a href="${pageContext.request.contextPath}/jsp/sign_up.jsp">Sign Up</a></li>
-</ul>
-<footer>
-    <jsp:include page="common/footer.jsp"/>
-</footer>
+<div class="container">
+    <header>
+        <jsp:include page="common/header.jsp"/>
+    </header>
+    <p>Locale: ${language}</p>
+    <ul>
+        <li><a href="${absolutePath}/jsp/sign_in.jsp">Sign In</a></li>
+        <li><a href="${absolutePath}/controller?command=go_to_sign_up_page">Sign Up</a></li>
+        <li><a href="controller?command=sign_out">Sign Out</a></li>
+    </ul>
+    <footer>
+        <jsp:include page="common/footer.jsp"/>
+    </footer>
+</div>
 </body>
 </html>

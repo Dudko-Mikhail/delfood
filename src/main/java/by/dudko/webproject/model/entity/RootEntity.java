@@ -2,20 +2,20 @@ package by.dudko.webproject.model.entity;
 
 import java.io.Serializable;
 
-public abstract class RootEntity implements Serializable {
-    private long id;
+public abstract class RootEntity<T> implements Serializable {
+    private T id;
 
     protected RootEntity() {}
 
-    protected RootEntity(long id) {
+    protected RootEntity(T id) {
         this.id = id;
     }
 
-    public long getId() {
+    public T getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(T id) {
         this.id = id;
     }
 
@@ -24,14 +24,14 @@ public abstract class RootEntity implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        RootEntity that = (RootEntity) o;
+        RootEntity<?> that = (RootEntity<?>) o;
 
-        return id == that.id;
+        return id != null ? id.equals(that.id) : that.id == null;
     }
 
     @Override
     public int hashCode() {
-        return (int) (id ^ (id >>> 32));
+        return id != null ? id.hashCode() : 0;
     }
 
     @Override
