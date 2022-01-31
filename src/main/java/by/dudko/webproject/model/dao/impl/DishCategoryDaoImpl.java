@@ -15,14 +15,14 @@ public class DishCategoryDaoImpl implements DishCategoryDao { // todo добав
     private static final String FIND_CATEGORY_BY_ID_AND_LOCALE_ID = """
             SELECT dc.category_id, image_url, category_name name
             FROM dish_categories dc
-                 JOIN locales_categories AS lc on lc.category_id = dc.category_id
-            WHERE dc.category_id = ? AND lc.locale_id = ?
+                 JOIN categories_translations AS ct on ct.category_id = dc.category_id
+            WHERE dc.category_id = ? AND ct.language_id = ?
             """;
     private static final String FIND_CATEGORY_BY_ID_AND_LOCALE = """
             SELECT dc.category_id, image_url, category_name name
             FROM dish_categories dc
-                 JOIN locales_categories AS lc on lc.category_id = dc.category_id
-                 JOIN locales l on l.locale_id = lc.locale_id
+                 JOIN categories_translations AS ct on ct.category_id = dc.category_id
+                 JOIN languages l on l.language_id = ct.language_id
             WHERE dc.category_id = ? AND l.name = ?
             """;
     private static final String DELETE_CATEGORY_BY_ID = """
@@ -30,7 +30,7 @@ public class DishCategoryDaoImpl implements DishCategoryDao { // todo добав
             WHERE category_id = ?
             """;
     private static final String ADD_NEW_TRANSLATION = """
-            INSERT INTO locales_categories (category_id, locale_id, category_name)
+            INSERT INTO categories_translations (category_id, language_id, category_name)
             VALUES (?, ?, ?)
             """;
     private static final DishCategoryDaoImpl INSTANCE = new DishCategoryDaoImpl();
@@ -70,32 +70,32 @@ public class DishCategoryDaoImpl implements DishCategoryDao { // todo добав
     @Override
     public Optional<DishCategory> findCategoryByIdAndLanguage(int categoryId, Language language) throws DaoException { // todo вынести в сервис
         return language.getId() != null
-                ? findCategoryByIdAndLocaleId(categoryId, language.getId())
-                : findCategoryByIdAndLocaleName(categoryId, language.getName());
+                ? findCategoryByIdAndLanguageId(categoryId, language.getId())
+                : findCategoryByIdAndLanguageName(categoryId, language.getName());
     }
 
     @Override
-    public Optional<DishCategory> findCategoryByIdAndLocaleName(int categoryId, String locale) throws DaoException {
+    public Optional<DishCategory> findCategoryByIdAndLanguageName(int categoryId, String language) throws DaoException {
         try (var connection = pool.takeConnection();
              var preparedStatement = connection.prepareStatement(FIND_CATEGORY_BY_ID_AND_LOCALE)) {
             preparedStatement.setInt(1, categoryId);
-            preparedStatement.setString(2, locale);
+            preparedStatement.setString(2, language);
             return categoryMapper.mapRow(preparedStatement.executeQuery());
         } catch (SQLException e) {
-            throw new DaoException("Failed to find dish category by id and locale", e);
+            throw new DaoException("Failed to find dish category by id and language", e);
         }
 
     }
 
     @Override
-    public Optional<DishCategory> findCategoryByIdAndLocaleId(int categoryId, int localeId) throws DaoException {
+    public Optional<DishCategory> findCategoryByIdAndLanguageId(int categoryId, int languageId) throws DaoException {
         try (var connection = pool.takeConnection();
              var preparedStatement = connection.prepareStatement(FIND_CATEGORY_BY_ID_AND_LOCALE_ID)) {
             preparedStatement.setInt(1, categoryId);
-            preparedStatement.setInt(2, localeId);
+            preparedStatement.setInt(2, languageId);
             return categoryMapper.mapRow(preparedStatement.executeQuery());
         } catch (SQLException e) {
-            throw new DaoException("Failed to find dish category by id and locale id", e);
+            throw new DaoException("Failed to find dish category by id and language id", e);
         }
     }
 

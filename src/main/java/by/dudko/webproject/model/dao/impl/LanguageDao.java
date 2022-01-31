@@ -13,20 +13,20 @@ import java.util.Optional;
 
 public class LanguageDao implements BaseDao<Integer, Language> {
     private static final String FIND_ALL_LANGUAGES = """
-            SELECT locale_id, name
-            FROM locales
+            SELECT language_id, name
+            FROM languages
             """;
     private static final String FIND_LANGUAGE_BY_ID = """
-            SELECT locale_id, name
-            FROM locales
-            WHERE locale_id = ?
+            SELECT language_id, name
+            FROM languages
+            WHERE language_id = ?
             """;
     private static final String DELETE_LANGUAGE_BY_ID = """
-            DELETE FROM locales
-            WHERE locale_id = ?
+            DELETE FROM languages
+            WHERE language_id = ?
             """;
     private static final String CREATE_LANGUAGE = """
-            INSERT INTO locales (name)
+            INSERT INTO languages (name)
             VALUES (?)
             """;
     private static final LanguageDao INSTANCE = new LanguageDao();

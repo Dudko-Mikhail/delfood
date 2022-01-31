@@ -11,7 +11,7 @@ import java.util.Optional;
 
 public class LanguageRowMapper implements RowMapper<Language> {
     private static final Logger logger = LogManager.getLogger();
-    private static final String LANGUAGE_ID = "locale_id";
+    private static final String LANGUAGE_ID = "language_id";
     private static final String LANGUAGE_NAME = "name";
     private static final LanguageRowMapper INSTANCE = new LanguageRowMapper();
 
