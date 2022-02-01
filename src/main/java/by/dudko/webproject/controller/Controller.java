@@ -3,6 +3,7 @@ package by.dudko.webproject.controller;
 import by.dudko.webproject.controller.command.Command;
 import by.dudko.webproject.controller.command.CommandType;
 import by.dudko.webproject.exception.CommandException;
+import by.dudko.webproject.util.PathUtils;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -39,20 +40,23 @@ public class Controller extends HttpServlet {
         try {
             Router router = command.get().execute(request);
             String pagePath = router.getPagePath();
-            if (router.getRouteType() == Router.RouteType.FORWARD) {
-                request.getRequestDispatcher(pagePath).forward(request, response);
-            } else {
-                pagePath = addContextPath(request, router.getPagePath());
-                response.sendRedirect(pagePath);
+            switch (router.getRouteType()) {
+                case REDIRECT -> {
+                    pagePath = PathUtils.addContextPath(request, router.getPagePath());
+                    response.sendRedirect(pagePath);
+                }
+                case FORWARD -> request.getRequestDispatcher(pagePath).forward(request, response);
+                default -> response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             }
+//            if (router.getRouteType() == Router.RouteType.FORWARD) {
+//                request.getRequestDispatcher(pagePath).forward(request, response);
+//            } else {
+//                pagePath = addContextPath(request, router.getPagePath());
+//                response.sendRedirect(pagePath);
+//            }
         } catch (CommandException e) {
             logger.error("Exception during command execution", e);
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
-    }
-
-    private String addContextPath(HttpServletRequest request, String url) {
-        String context = request.getContextPath();
-        return String.format("%s/%s", context, url);
     }
 }

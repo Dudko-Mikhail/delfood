@@ -11,7 +11,7 @@ public final class RequestParameter {
     public static final String PHONE_NUMBER = "phone_number";
     public static final String FIRST_NAME = "first_name";
     public static final String LAST_NAME = "last_name";
-
+    public static final String LOGIN_EMAIL = "login_email";
 
     private RequestParameter() {}
 }
