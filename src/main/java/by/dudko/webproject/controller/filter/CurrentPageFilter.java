@@ -1,6 +1,7 @@
 package by.dudko.webproject.controller.filter;
 
-import by.dudko.webproject.controller.SessionAttributes;
+import by.dudko.webproject.controller.SessionAttribute;
+import jakarta.servlet.DispatcherType;
 import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -12,7 +13,8 @@ import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 
-@WebFilter(filterName = "currentPageFilter", urlPatterns = "*.jsp")
+@WebFilter(filterName = "currentPageFilter", urlPatterns = "*.jsp",
+        dispatcherTypes = {DispatcherType.FORWARD, DispatcherType.REQUEST})
 public class CurrentPageFilter implements Filter {
     private static final String INDEX_PAGE = "index.jsp";
     private static final String PAGES_ROOT = "/jsp";
@@ -23,9 +25,8 @@ public class CurrentPageFilter implements Filter {
         String uri = httpRequest.getRequestURI();
         int pageStartIndex = uri.indexOf(PAGES_ROOT);
         String currentPage = pageStartIndex != -1 ? uri.substring(pageStartIndex) : INDEX_PAGE;
-
         HttpSession session = httpRequest.getSession();
-        session.setAttribute(SessionAttributes.PAGE, currentPage);
+        session.setAttribute(SessionAttribute.PAGE, currentPage);
         chain.doFilter(request, response);
     }
 }
