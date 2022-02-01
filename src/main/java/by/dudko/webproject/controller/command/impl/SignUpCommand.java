@@ -1,13 +1,14 @@
 package by.dudko.webproject.controller.command.impl;
 
 import by.dudko.webproject.controller.PagePath;
-import by.dudko.webproject.controller.SessionAttributes;
+import by.dudko.webproject.controller.SessionAttribute;
 import by.dudko.webproject.controller.command.Command;
 import by.dudko.webproject.controller.Router;
 import by.dudko.webproject.exception.CommandException;
 import by.dudko.webproject.exception.ServiceException;
 import by.dudko.webproject.model.service.UserService;
 import by.dudko.webproject.model.service.impl.UserServiceImpl;
+import by.dudko.webproject.util.PathUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
@@ -26,7 +27,7 @@ public class SignUpCommand implements Command { // TODO
 
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
-        HashMap<String, String> userData = new HashMap<>();
+        HashMap<String, String> userData = new HashMap<>(); // TODO подумать над способом поставки данных для валидатора
         userData.put(LOGIN, request.getParameter(LOGIN));
         userData.put(EMAIL, request.getParameter(EMAIL));
         userData.put(PASSWORD, request.getParameter(PASSWORD));
@@ -41,11 +42,12 @@ public class SignUpCommand implements Command { // TODO
             if (isRegistered) { // TODO success registration action. Add mail logic and redirect to confirmation page
                 router.setRouteType(Router.RouteType.FORWARD);
                 router.setPagePath(PagePath.SIGN_IN_PAGE);
-                session.setAttribute(SessionAttributes.LOGIN, request.getParameter(LOGIN));
+                session.setAttribute(SessionAttribute.LOGIN, request.getParameter(LOGIN));
             }
             else { // todo registration failed. Think about actions
                 router.setRouteType(Router.RouteType.REDIRECT);
-                router.setPagePath((String) session.getAttribute(SessionAttributes.PAGE));
+                String page = (String) session.getAttribute(SessionAttribute.PAGE);
+                router.setPagePath(page);
             }
         } catch (ServiceException e) {
             throw new CommandException("Error during registration command", e);
