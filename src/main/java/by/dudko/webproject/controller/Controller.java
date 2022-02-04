@@ -20,13 +20,13 @@ public class Controller extends HttpServlet {
     private static final Logger logger = LogManager.getLogger();
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        processRequest(req, resp);
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        processRequest(request, response);
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        processRequest(req, resp);
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        processRequest(request, response);
     }
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
@@ -36,24 +36,19 @@ public class Controller extends HttpServlet {
             response.sendError(HttpServletResponse.SC_NOT_FOUND);
             return;
         }
-
         try {
             Router router = command.get().execute(request);
             String pagePath = router.getPagePath();
+
             switch (router.getRouteType()) {
                 case REDIRECT -> {
                     pagePath = PathUtils.addContextPath(request, router.getPagePath());
                     response.sendRedirect(pagePath);
                 }
                 case FORWARD -> request.getRequestDispatcher(pagePath).forward(request, response);
+                case ERROR -> response.sendError(router.getErrorCode());
                 default -> response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             }
-//            if (router.getRouteType() == Router.RouteType.FORWARD) {
-//                request.getRequestDispatcher(pagePath).forward(request, response);
-//            } else {
-//                pagePath = addContextPath(request, router.getPagePath());
-//                response.sendRedirect(pagePath);
-//            }
         } catch (CommandException e) {
             logger.error("Exception during command execution", e);
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);

@@ -17,6 +17,7 @@ import java.util.List;
 
 public class GoToCategoriesPage implements Command { // TODO refactor
     private static final DishCategoryServiceImpl dishCategoryService = DishCategoryServiceImpl.getInstance();
+
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
         HttpSession session = request.getSession();
@@ -24,7 +25,7 @@ public class GoToCategoriesPage implements Command { // TODO refactor
         try {
             List<DishCategory> categories = dishCategoryService.findAllCategoriesByLanguage(language);
             request.setAttribute(RequestAttribute.DISH_CATEGORIES, categories);
-            return new Router(Router.RouteType.REDIRECT, PagePath.CATEGORIES_PAGE);
+            return new Router(Router.RouteType.FORWARD, PagePath.CATEGORIES_PAGE);
         } catch (ServiceException e) {
             throw new CommandException("Failed to execute GoToCategoriesPage command", e);
         }

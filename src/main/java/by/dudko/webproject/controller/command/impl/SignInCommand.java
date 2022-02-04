@@ -19,41 +19,40 @@ import java.util.Optional;
 public class SignInCommand implements Command { // todo add messages
     private final UserService userService = UserServiceImpl.getInstance();
     @Override
-    public Router execute(HttpServletRequest request) throws CommandException {
+    public Router execute(HttpServletRequest request) throws CommandException { // TODO refactor
         String loginEmail = request.getParameter(RequestParameter.LOGIN_EMAIL);
         String password = request.getParameter(RequestParameter.PASSWORD);
-        Router router = new Router();
+        Router router;
         try {
             Optional<User> optionalUser = userService.signIn(loginEmail, password);
             if (optionalUser.isPresent()) { // FIXME изменить логику с добавлением страниц (Admin page, client page)
                 User user = optionalUser.get();
                 switch (user.getStatus()) {
-                    case UNCONFIRMED -> {
-                        // todo add unconfirmed user action
+                    case UNCONFIRMED -> { // todo add unconfirmed user action
+
+                        router = new Router(Router.RouteType.REDIRECT, PagePath.SIGN_IN_PAGE);
                     }
                     case ACTIVE -> {
                         HttpSession session = request.getSession();
                         session.setAttribute(SessionAttribute.LOGIN, user.getLogin());
                         session.setAttribute(SessionAttribute.ROLE, user.getRole());
-                        switch (user.getRole()) {
-                            case ADMIN -> router.setPagePath(PagePath.ADMIN_PAGE);
-                            case CLIENT -> router.setPagePath(PagePath.HOME_PAGE); // TODO client page
-                        }
-                        router.setRouteType(Router.RouteType.FORWARD);
-
+                        router = switch (user.getRole()) {
+                            case ADMIN -> new Router(Router.RouteType.FORWARD, PagePath.ADMIN_PAGE);
+                            case CLIENT -> new Router(Router.RouteType.FORWARD, PagePath.HOME_PAGE); // TODO client page
+                            default -> new Router(Router.RouteType.REDIRECT, PagePath.SIGN_IN_PAGE);
+                        };
                     }
-                    case BLOCKED -> {
-                        // TODO add blocked user action
+                    case BLOCKED -> { // TODO add blocked action
+                        router = new Router(Router.RouteType.REDIRECT, PagePath.SIGN_IN_PAGE);
                     }
                     default -> throw new CommandException("Unsupported user role " + user.getRole());
                 }
             }
             else {
-                router.setPagePath(PagePath.SIGN_IN_PAGE);
-                router.setRouteType(Router.RouteType.REDIRECT);
+                router = new Router(Router.RouteType.REDIRECT, PagePath.SIGN_UP_PAGE);
             }
         } catch (ServiceException e) {
-            throw new CommandException("Error during sign in command", e);
+            throw new CommandException("Failed to execute SignIn command", e);
         }
         return router;
     }

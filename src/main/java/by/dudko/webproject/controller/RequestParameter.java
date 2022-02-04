@@ -13,5 +13,8 @@ public final class RequestParameter {
     public static final String LAST_NAME = "last_name";
     public static final String LOGIN_EMAIL = "login_email";
 
+    public static final String CATEGORY_ID = "category_id";
+    public static final String DISH_ID = "dish_id";
+
     private RequestParameter() {}
 }

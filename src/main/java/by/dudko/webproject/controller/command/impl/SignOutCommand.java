@@ -6,7 +6,6 @@ import by.dudko.webproject.controller.SessionAttribute;
 import by.dudko.webproject.controller.command.Command;
 import by.dudko.webproject.exception.CommandException;
 import by.dudko.webproject.model.entity.User;
-import by.dudko.webproject.util.PathUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 

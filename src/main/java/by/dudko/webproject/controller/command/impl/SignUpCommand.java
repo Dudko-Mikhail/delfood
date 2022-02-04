@@ -8,7 +8,6 @@ import by.dudko.webproject.exception.CommandException;
 import by.dudko.webproject.exception.ServiceException;
 import by.dudko.webproject.model.service.UserService;
 import by.dudko.webproject.model.service.impl.UserServiceImpl;
-import by.dudko.webproject.util.PathUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
@@ -35,22 +34,19 @@ public class SignUpCommand implements Command { // TODO
         userData.put(PHONE_NUMBER, request.getParameter(PHONE_NUMBER));
         userData.put(FIRST_NAME, request.getParameter(FIRST_NAME));
         userData.put(LAST_NAME, request.getParameter(LAST_NAME));
-        Router router = new Router();
+        Router router;
         try {
             boolean isRegistered = userService.signUp(userData);
             HttpSession session = request.getSession();
             if (isRegistered) { // TODO success registration action. Add mail logic and redirect to confirmation page
-                router.setRouteType(Router.RouteType.FORWARD);
-                router.setPagePath(PagePath.SIGN_IN_PAGE);
+                router = new Router(Router.RouteType.FORWARD, PagePath.SIGN_IN_PAGE); // todo or home page
                 session.setAttribute(SessionAttribute.LOGIN, request.getParameter(LOGIN));
             }
             else { // todo registration failed. Think about actions
-                router.setRouteType(Router.RouteType.REDIRECT);
-                String page = (String) session.getAttribute(SessionAttribute.PAGE);
-                router.setPagePath(page);
+                router = new Router(Router.RouteType.REDIRECT, PagePath.SIGN_UP_PAGE);
             }
         } catch (ServiceException e) {
-            throw new CommandException("Error during registration command", e);
+            throw new CommandException("Failed to execute SignUp command", e);
         }
         return router;
     }
