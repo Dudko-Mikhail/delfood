@@ -17,6 +17,10 @@ public class UserServiceImpl implements UserService {
     private static final UserServiceImpl INSTANCE = new UserServiceImpl();
     private final UserDao userDao = UserDaoImpl.getInstance();
 
+    public static UserServiceImpl getInstance() {
+        return INSTANCE;
+    }
+
     private UserServiceImpl() {}
 
     @Override
@@ -44,7 +48,8 @@ public class UserServiceImpl implements UserService {
                 .firstName(userData.get(RequestParameter.FIRST_NAME))
                 .lastName(userData.get(RequestParameter.LAST_NAME))
                 .password(encryptedPassword)
-                .phoneNumber(userData.get(RequestParameter.PHONE_NUMBER));
+                .phoneNumber(userData.get(RequestParameter.PHONE_NUMBER))
+                .role(User.Role.CLIENT);
         User user = builder.buildUser();
         try {
             userDao.create(user);
@@ -54,8 +59,19 @@ public class UserServiceImpl implements UserService {
         return true;
     }
 
-    public static UserServiceImpl getInstance() {
-        return INSTANCE;
+    @Override
+    public Optional<User> signIn(String loginEmail, String password) throws ServiceException {
+        try { // TODO добавить валидацию
+            var encryptor = PasswordEncryptorImpl.getInstance();
+            Optional<User> optionalUser = userDao.findUserByLoginOrEmail(loginEmail, loginEmail);
+            if (optionalUser.isEmpty()) {
+                return Optional.empty();
+            }
+            String encryptedPassword = optionalUser.get().getPassword();
+            return encryptor.matchPassword(password, encryptedPassword) ? optionalUser : Optional.empty();
+        } catch (DaoException e) {
+            throw new ServiceException("Failed to sign in user", e);
+        }
     }
 
     private boolean isLoginExists(String login) throws ServiceException {
