@@ -6,6 +6,6 @@
     <title>index</title>
 </head>
 <body>
-<jsp:forward page="jsp/home.jsp"/>
+    <c:redirect url="controller?command=go_to_home_page"/>
 </body>
 </html>

@@ -1,22 +1,25 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="imports.jspf" %>
 
-<fmt:setBundle scope="session" basename="localization.localized_data"/>
-<fmt:message var="login" key="field.login"/>
-<fmt:message var="email" key="field.email"/>
-<fmt:message var="password" key="field.password"/>
-<fmt:message var="repeat_password" key="field.repeat_password"/>
-<fmt:message var="first_name" key="field.first_name"/>
-<fmt:message var="last_name" key="field.last_name"/>
-<fmt:message var="phone_number" key="field.phone_number"/>
-<fmt:message var="sign_up" key="btn.sign_up"/>
+<fmt:message scope="page" var="title" key="page.title.sign_up"/>
+<fmt:message var="login" key="form.login"/>
+<fmt:message var="email" key="form.email"/>
+<fmt:message var="password" key="form.password"/>
+<fmt:message var="repeat_password" key="form.repeat_password"/>
+<fmt:message var="first_name" key="form.first_name"/>
+<fmt:message var="last_name" key="form.last_name"/>
+<fmt:message var="phone_number" key="form.phone_number"/>
+<fmt:message var="sign_up" key="form.action.sign_up"/>
 
-<html>
+<!DOCTYPE html>
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" type="text/css" href="../css/style.css">
-    <link rel="stylesheet" type="text/css" href="../css/registration.css">
-    <title>Sing Up</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>${title}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <link href="${absolutePath}/css/style.css" rel="stylesheet" type="text/css">
 </head>
 <body>
 <jsp:include page="common/header.jsp"/>
