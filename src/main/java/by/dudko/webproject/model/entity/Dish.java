@@ -3,13 +3,13 @@ package by.dudko.webproject.model.entity;
 import java.math.BigDecimal;
 
 public class Dish extends RootEntity<Integer> {
-    private BigDecimal price;
-    private BigDecimal discount;
+    private String name;
+    private String category;
+    private String description;
     private int weight;
     private String imageUrl;
-    private String name;
-    private String description;
-    private DishCategory category;
+    private BigDecimal price;
+    private BigDecimal discount;
 
     public static DishBuilder getBuilder() {
         return new DishBuilder();
@@ -65,11 +65,11 @@ public class Dish extends RootEntity<Integer> {
         this.description = description;
     }
 
-    public DishCategory getCategory() {
+    public String getCategory() {
         return category;
     }
 
-    public void setCategory(DishCategory category) {
+    public void setCategory(String category) {
         this.category = category;
     }
 
@@ -110,7 +110,7 @@ public class Dish extends RootEntity<Integer> {
             return this;
         }
 
-        public DishBuilder category(DishCategory category) {
+        public DishBuilder category(String category) {
             dish.setCategory(category);
             return this;
         }
@@ -164,7 +164,7 @@ public class Dish extends RootEntity<Integer> {
         sb.append(", imageUrl='").append(imageUrl).append('\'');
         sb.append(", name='").append(name).append('\'');
         sb.append(", description='").append(description).append('\'');
-        sb.append(", category=").append(category);
+        sb.append(", categoryName='").append(category).append('\'');
         sb.append('}');
         return sb.toString();
     }
