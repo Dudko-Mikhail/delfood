@@ -22,8 +22,6 @@ import static by.dudko.webproject.controller.RequestParameter.FIRST_NAME;
 import static by.dudko.webproject.controller.RequestParameter.LAST_NAME;
 
 public class SignUpCommand implements Command { // TODO
-    private final UserService userService = UserServiceImpl.getInstance();
-
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
         HashMap<String, String> userData = new HashMap<>(); // TODO подумать над способом поставки данных для валидатора
@@ -36,6 +34,7 @@ public class SignUpCommand implements Command { // TODO
         userData.put(LAST_NAME, request.getParameter(LAST_NAME));
         Router router;
         try {
+            UserService userService = UserServiceImpl.getInstance();
             boolean isRegistered = userService.signUp(userData);
             HttpSession session = request.getSession();
             if (isRegistered) { // TODO success registration action. Add mail logic and redirect to confirmation page

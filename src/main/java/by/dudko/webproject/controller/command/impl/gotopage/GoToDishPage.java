@@ -22,7 +22,6 @@ import java.util.Optional;
 
 public class GoToDishPage implements Command {
     private static final Logger logger = LogManager.getLogger();
-    private final DishService dishService = DishServiceImpl.getInstance();
 
     @Override
     public Router execute(HttpServletRequest request) throws CommandException { // TODO what is better??? 1, 2, 3
@@ -31,6 +30,7 @@ public class GoToDishPage implements Command {
         try {
             int dishId = Integer.parseInt(request.getParameter(RequestParameter.DISH_ID));
             Language sessionLanguage = (Language) session.getAttribute(SessionAttribute.LANGUAGE);
+            DishService dishService = DishServiceImpl.getInstance();
             Optional<Dish> dish = dishService.findDishByIdAndLanguage(dishId, sessionLanguage);
             if (dish.isEmpty()) {
                 String message = String.format("Failed to find translation for dish with id %d into %s language",
@@ -56,6 +56,7 @@ public class GoToDishPage implements Command {
         try {
             int dishId = Integer.parseInt(request.getParameter(RequestParameter.DISH_ID));
             Language sessionLanguage = (Language) session.getAttribute(SessionAttribute.LANGUAGE);
+            DishService dishService = DishServiceImpl.getInstance();
             Optional<Dish> dish = dishService.findDishByIdAndLanguage(dishId, sessionLanguage);
             if (dish.isPresent()) {
                 request.setAttribute(RequestAttribute.DISH, dish.get());
@@ -81,6 +82,7 @@ public class GoToDishPage implements Command {
         try {
             int dishId = Integer.parseInt(request.getParameter(RequestParameter.DISH_ID));
             Language sessionLanguage = (Language) session.getAttribute(SessionAttribute.LANGUAGE);
+            DishService dishService = DishServiceImpl.getInstance();
             Optional<Dish> dish = dishService.findDishByIdAndLanguage(dishId, sessionLanguage);
             if (dish.isEmpty()) {
                 String message = String.format("Failed to find translation for dish with id %d into %s language",

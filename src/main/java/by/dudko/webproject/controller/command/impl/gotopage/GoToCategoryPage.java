@@ -47,7 +47,7 @@ public class GoToCategoryPage implements Command {
             List<Dish> dishes = dishService.findDishesByCategoryIdAndLanguage(categoryId, sessionLanguage);
             request.setAttribute(RequestAttribute.DISHES, dishes);
             router = new Router(Router.RouteType.FORWARD, PagePath.CATEGORY_PAGE);
-        } catch (NumberFormatException e) {
+        } catch (NumberFormatException e) { // FIXME после redirect страница становиться пустой (нет ни имени категории, ни товаров)
             logger.warn("Attempt to execute GoToCategoryPage command with invalid category id");
             String currentPage = (String) session.getAttribute(SessionAttribute.PAGE);
             router = new Router(Router.RouteType.REDIRECT, currentPage);

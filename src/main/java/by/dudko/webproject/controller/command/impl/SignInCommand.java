@@ -17,13 +17,13 @@ import java.util.Optional;
 
 
 public class SignInCommand implements Command { // todo add messages
-    private final UserService userService = UserServiceImpl.getInstance();
     @Override
     public Router execute(HttpServletRequest request) throws CommandException { // TODO refactor
         String loginEmail = request.getParameter(RequestParameter.LOGIN_EMAIL);
         String password = request.getParameter(RequestParameter.PASSWORD);
         Router router;
         try {
+            UserService userService = UserServiceImpl.getInstance();
             Optional<User> optionalUser = userService.signIn(loginEmail, password);
             if (optionalUser.isPresent()) { // FIXME изменить логику с добавлением страниц (Admin page, client page)
                 User user = optionalUser.get();
