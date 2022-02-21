@@ -2,14 +2,15 @@
 <%@include file="imports.jspf" %>
 
 <fmt:message scope="page" var="title" key="page.title.sign_up"/>
-<fmt:message var="login" key="form.login"/>
-<fmt:message var="email" key="form.email"/>
-<fmt:message var="password" key="form.password"/>
-<fmt:message var="repeat_password" key="form.repeat_password"/>
-<fmt:message var="first_name" key="form.first_name"/>
-<fmt:message var="last_name" key="form.last_name"/>
-<fmt:message var="phone_number" key="form.phone_number"/>
-<fmt:message var="sign_up" key="form.action.sign_up"/>
+<fmt:message var="login" key="label.login"/>
+<fmt:message var="email" key="label.email"/>
+<fmt:message var="password" key="label.password"/>
+<fmt:message var="repeat_password" key="label.repeat_password"/>
+<fmt:message var="first_name" key="label.first_name"/>
+<fmt:message var="last_name" key="label.last_name"/>
+<fmt:message var="phone_number" key="label.phone_number"/>
+<fmt:message var="sign_up" key="action.sign_up"/>
+<fmt:message var="header_sign_up" key="header.sign_up"/>
 
 <!DOCTYPE html>
 <html lang="ru">
@@ -24,35 +25,47 @@
 <body>
 <jsp:include page="common/header.jsp"/>
 <div class="container">
-    <div class="registration_form">
-    <h2>${sign_up}</h2>
-        <form action="${pageContext.request.contextPath}/controller" method="post">
-            <input type="hidden" id="command" name="command" value="sign_up">
+    <h1 class="mb-2">${header_sign_up}</h1>
+    <form class="border px-4 py-3" action="${pageContext.request.contextPath}/controller" method="post">
+        <input type="hidden" id="command" name="command" value="sign_up">
 
-            <label for="login">${login}</label>
-            <input type="text" id="login" name="login" required/>
+        <div class="mb-3">
+            <label for="login" class="form-label">${login}</label>
+            <input type="text" class="form-control" id="login" name="login" required/>
+        </div>
 
-            <label for="email">${email}</label>
-            <input type="email" id="email" name="email" required/>
+        <div class="mb-3">
+            <label for="email" class="form-label">${email}</label>
+            <input type="email" class="form-control" id="email" name="email" placeholder="email@example.com" required/>
+        </div>
 
-            <label for="first_name">${first_name}</label>
-            <input type="text" id="first_name" name="first_name"/>
+        <div class="mb-3">
+            <label for="first_name" class="form-label">${first_name}</label>
+            <input type="text" class="form-control" id="first_name" name="first_name"/>
+        </div>
 
-            <label for="last_name">${last_name}</label>
-            <input type="text" id="last_name" name="last_name"/>
+        <div class="mb-3">
+            <label for="last_name" class="form-label">${last_name}</label>
+            <input type="text" class="form-control" id="last_name" name="last_name"/>
+        </div>
 
-            <label for="phone_number">${phone_number}</label>
-            <input type="tel" id="phone_number" name="phone_number" required/>
+        <div class="mb-3">
+            <label for="phone_number" class="form-label">${phone_number}</label>
+            <input type="tel" class="form-control" id="phone_number" name="phone_number" required/>
+        </div>
 
-            <label for="password">${password}</label>
-            <input type="password" id="password" name="password" required>
+        <div class="mb-3">
+            <label for="password" class="form-label">${password}</label>
+            <input type="password" class="form-control" id="password" name="password" required>
+        </div>
 
-            <label for="repeat_password">${repeat_password}</label>
-            <input type="password" id="repeat_password" name="repeat_password" required>
+        <div class="mb-3">
+            <label for="repeat_password" class="form-label">${repeat_password}</label>
+            <input type="password" class="form-control" id="repeat_password" name="repeat_password" required>
+        </div>
 
-            <button type="submit">${sign_up}</button>
-        </form>
-    </div>
+        <button class="btn btn-primary" type="submit">${sign_up}</button>
+    </form>
 </div>
 <jsp:include page="common/footer.jsp"/>
 </body>

@@ -2,6 +2,7 @@
 <%@include file="imports.jspf"%>
 
 <fmt:message var="empty_dishes" key="message.empty.dishes"/>
+<fmt:message var="add_to_cart" key="action.add_to_cart"/>
 
 <!DOCTYPE html>
 <html lang="ru">
@@ -15,20 +16,36 @@
 </head>
 <body>
 <jsp:include page="common/header.jsp"/>
-    <h1>${category_name}</h1>
-    <div>
+<div class="container">
+    <h1 class="text-center">${category_name}</h1>
+    <hr/>
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
         <c:if test="${empty dishes}">
-            <c:out value="${empty_dishes}"/>
+            <span class="w-100 text-center">${empty_dishes}</span>
         </c:if>
         <c:forEach var="dish" items="${dishes}">
-            <div>
-                <p>${dish.name}</p>
-                <p>${dish.price}</p>
-                <a href="${absolutePath}/controller?command=go_to_dish_page&dish_id=${dish.id}">Link</a>
-                <hr/>
+            <div class="col">
+                <div class="text-center fs-2">${dish.name}</div>
+                <div class="category_image">
+                    <c:choose>
+                        <c:when test="${dish.imageUrl ne null}">
+                            <img src="${dish.imageUrl}" alt="dish image">
+                        </c:when>
+                        <c:otherwise>
+                            <img src="${absolutePath}/img/default_dish.png" alt="Dish image">
+                        </c:otherwise>
+                    </c:choose>
+                </div>
+                <div class="row">
+                    <div class="col-8">${dish.price} BYN</div>
+                    <div class="col-4">
+                        <a href="#">${add_to_cart}</a> <!-- TODO add command later -->
+                    </div>
+                </div>
             </div>
         </c:forEach>
     </div>
+</div>
 <jsp:include page="common/footer.jsp"/>
 </body>
 </html>

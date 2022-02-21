@@ -16,13 +16,17 @@
 <body>
 <jsp:include page="common/header.jsp"/>
 <div class="container">
-    <h1>Dish Categories</h1>
-    <div>
-        <c:forEach varStatus="index" var="category" items="${dish_categories}">
-            <c:out value="${category.name}"/>
-            <img src="${category.imageUrl}" alt="Category page"/>
-            <a href="${absolutePath}/controller?command=go_to_category_page&category_id=${category.id}">${category.id}</a>
-        </c:forEach>
+    <div class="row row-cols-1 row-cols-md-2">
+    <c:forEach var="category" items="${dish_categories}">
+        <div class="col mb-2">
+            <a href="${absolutePath}/controller?command=go_to_category_page&category_id=${category.id}" class="text-decoration-none">
+                <div class="text-center text-black fs-4">${category.name}</div>
+                <div class="category_image">
+                    <img src="${category.imageUrl}" alt="Category image"/>
+                </div>
+            </a>
+        </div>
+    </c:forEach>
     </div>
 </div>
 <jsp:include page="common/footer.jsp"/>
