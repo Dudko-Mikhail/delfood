@@ -9,8 +9,8 @@ import org.apache.logging.log4j.Logger;
 import java.util.List;
 
 public class LanguageProvider { // TODO Ask some questions;
-    private static final Logger logger = LogManager.getLogger();
     public static final Language DEFAULT_LANGUAGE = new Language("en_US");
+    private static final Logger logger = LogManager.getLogger();
     private static final LanguageProvider INSTANCE;
     private static final List<Language> languages;
 
@@ -30,7 +30,9 @@ public class LanguageProvider { // TODO Ask some questions;
         return INSTANCE;
     }
 
-    public boolean isValidLanguage(String language) { // TODO maybe remove form here
+    private LanguageProvider() {}
+
+    public boolean isValidLanguage(String language) { // TODO maybe remove from here
         return languages.stream()
                 .anyMatch(l -> l.getName().equals(language));
     }
@@ -46,6 +48,13 @@ public class LanguageProvider { // TODO Ask some questions;
             i++;
         }
         return DEFAULT_LANGUAGE;
+    }
+
+    public List<String> getAvailableLanguageNames() {
+        return languages.stream()
+                .map(Language::getName)
+                .distinct()
+                .toList();
     }
 
 }

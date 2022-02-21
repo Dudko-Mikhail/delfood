@@ -46,7 +46,7 @@ public class MailSender {
             MimeMessage message = new MimeMessage(createSession());
             message.addRecipient(Message.RecipientType.TO, new InternetAddress(mailRecipient));
             message.setSubject(mailSubject);
-            message.setText(mailContent);
+            message.setContent(mailContent, "text/html");
             Transport.send(message);
         } catch (MessagingException e) {
             logger.error(String.format("Failed to send the message to %s", mailRecipient), e);

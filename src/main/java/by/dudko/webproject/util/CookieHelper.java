@@ -6,6 +6,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import java.util.Optional;
 
 public final class CookieHelper {
+    public static final int COOKIE_LIFE_TIME = 60 * 60 * 24 * 7;
+
     public static Optional<Cookie> findCookieByName(String cookieName, HttpServletRequest request) {
         Cookie[] cookies = request.getCookies();
         if (cookies == null) {

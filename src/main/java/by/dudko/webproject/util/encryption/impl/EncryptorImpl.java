@@ -1,12 +1,20 @@
 package by.dudko.webproject.util.encryption.impl;
 
-import by.dudko.webproject.util.encryption.PasswordEncryptor;
+import by.dudko.webproject.model.entity.User;
+import by.dudko.webproject.util.encryption.Encryptor;
 import org.mindrot.jbcrypt.BCrypt;
 
-public class PasswordEncryptorImpl implements PasswordEncryptor {
-    private static PasswordEncryptorImpl instance;
+public class EncryptorImpl implements Encryptor {
+    private static EncryptorImpl instance;
 
-    private PasswordEncryptorImpl() {}
+    public static Encryptor getInstance() {
+        if (instance == null) {
+            instance = new EncryptorImpl();
+        }
+        return instance;
+    }
+
+    private EncryptorImpl() {}
 
     @Override
     public String encryptPassword(String password) {
@@ -19,10 +27,20 @@ public class PasswordEncryptorImpl implements PasswordEncryptor {
         return BCrypt.checkpw(password, hash);
     }
 
-    public static PasswordEncryptor getInstance() {
-        if (instance == null) {
-            instance = new PasswordEncryptorImpl();
-        }
-        return instance;
+    @Override
+    public String generateUserVerificationCode(User user) {
+        String userHash = userToHash(user);
+        String salt = BCrypt.gensalt();
+        return BCrypt.hashpw(userHash, salt);
+    }
+
+    @Override
+    public boolean matchUserVerificationCode(User user, String verificationCode) {
+        String userHash = userToHash(user);
+        return BCrypt.checkpw(userHash, verificationCode);
+    }
+
+    private String userToHash(User user) {
+        return user.getLogin() + user.getEmail();
     }
 }
