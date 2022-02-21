@@ -7,7 +7,8 @@ import by.dudko.webproject.model.dao.UserDao;
 import by.dudko.webproject.model.dao.impl.UserDaoImpl;
 import by.dudko.webproject.model.entity.User;
 import by.dudko.webproject.model.service.UserService;
-import by.dudko.webproject.util.encryption.impl.PasswordEncryptorImpl;
+import by.dudko.webproject.util.encryption.Encryptor;
+import by.dudko.webproject.util.encryption.impl.EncryptorImpl;
 import by.dudko.webproject.validator.UserValidator;
 
 import java.util.Map;
@@ -24,24 +25,21 @@ public class UserServiceImpl implements UserService {
     private UserServiceImpl() {}
 
     @Override
-    public boolean signUp(Map<String, String> userData) throws ServiceException {
-        String login = userData.get(RequestParameter.LOGIN);
+    public Optional<String> signUp(Map<String, String> userData) throws ServiceException {
         UserValidator validator = UserValidator.getInstance();
-        String email = userData.get(RequestParameter.EMAIL);
-        if (!validator.isValid(userData) || isLoginExists(login) || isEmailExists(email)) {
-            return false;
+        if (!validator.isValid(userData)) { // TODO add validation report
+            return Optional.empty();
         }
-//        if (!validator.isValid(userData)) { FIXME remove if additional actions are not required
-//            return false;
-//        }
-//        if (isLoginExists(login)) {
-//            return false;
-//        }
-//        if (isEmailExists(email)) {
-//            return false;
-//        }
+        String login = userData.get(RequestParameter.LOGIN);
+        if (isLoginExists(login)) { // TODO add request attribute
+            return Optional.empty();
+        }
+        String email = userData.get(RequestParameter.EMAIL);
+        if (isEmailExists(email)) { // TODO add request attribute
+            return Optional.empty();
+        }
         var builder = User.getBuilder();
-        var encryptor = PasswordEncryptorImpl.getInstance();
+        var encryptor = EncryptorImpl.getInstance();
         String encryptedPassword = encryptor.encryptPassword(userData.get(RequestParameter.PASSWORD));
         builder.login(login)
                 .email(email)
@@ -53,17 +51,17 @@ public class UserServiceImpl implements UserService {
         User user = builder.buildUser();
         try {
             userDao.create(user);
+            return Optional.of(encryptor.generateUserVerificationCode(user));
         } catch (DaoException e) {
             throw new ServiceException("Failed to create new user", e);
         }
-        return true;
     }
 
     @Override
     public Optional<User> signIn(String loginEmail, String password) throws ServiceException {
         try { // TODO добавить валидацию
-            var encryptor = PasswordEncryptorImpl.getInstance();
-            Optional<User> optionalUser = userDao.findUserByLoginOrEmail(loginEmail, loginEmail);
+            var encryptor = EncryptorImpl.getInstance();
+            Optional<User> optionalUser = userDao.findUserByLoginOrEmail(loginEmail);
             if (optionalUser.isEmpty()) {
                 return Optional.empty();
             }
@@ -71,6 +69,33 @@ public class UserServiceImpl implements UserService {
             return encryptor.matchPassword(password, encryptedPassword) ? optionalUser : Optional.empty();
         } catch (DaoException e) {
             throw new ServiceException("Failed to sign in user", e);
+        }
+    }
+
+    @Override
+    public Optional<User> findUserByLogin(String login) throws ServiceException {
+        try {
+            return userDao.findUserByLogin(login);
+        } catch (DaoException e) {
+            throw new ServiceException("Failed to find user by login", e);
+        }
+    }
+
+    @Override
+    public boolean confirmRegistration(String login, String verificationCode) throws ServiceException {
+        try {
+            Optional<User> optionalUser = userDao.findUserByLogin(login);
+            if (optionalUser.isEmpty()) {
+                return false;
+            }
+            User user = optionalUser.get();
+            Encryptor encryptor = EncryptorImpl.getInstance();
+            if (!encryptor.matchUserVerificationCode(user, verificationCode)) {
+                return false;
+            }
+            return userDao.updateUserStatus(user.getId(), User.Status.ACTIVE);
+        } catch (DaoException e) {
+            throw new ServiceException("Failed to confirm registration", e);
         }
     }
 

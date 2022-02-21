@@ -17,6 +17,7 @@ public class DishRowMapper implements RowMapper<Dish> {
     private static final String WEIGHT = "weight";
     private static final String DESCRIPTION = "description";
     private static final String DISH_NAME = "dish_name";
+    private static final String IMAGE_URL = "image_url";
     private static final Logger logger = LogManager.getLogger();
     private static final DishRowMapper INSTANCE = new DishRowMapper();
 
@@ -35,7 +36,8 @@ public class DishRowMapper implements RowMapper<Dish> {
                         .weight(resultSet.getInt(WEIGHT))
                         .description(resultSet.getString(DESCRIPTION))
                         .name(resultSet.getString(DISH_NAME))
-                        .category(resultSet.getString(DISH_CATEGORY));
+                        .category(resultSet.getString(DISH_CATEGORY))
+                        .imageUrl(resultSet.getString(IMAGE_URL));
                 return Optional.of(builder.buildDish());
             }
         } catch (SQLException e) {

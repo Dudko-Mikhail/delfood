@@ -7,5 +7,6 @@ import java.util.List;
 
 public interface DishDao extends BaseDaoWithLocalization<Integer, Dish> {
     boolean addNewDishTranslation(int dishId, int languageId, String dishName, String dishDescription) throws DaoException;
+
     List<Dish> findDishesByCategoryIdAndLanguageId(int categoryId, int languageId) throws DaoException;
 }

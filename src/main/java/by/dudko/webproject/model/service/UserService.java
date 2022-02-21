@@ -7,6 +7,9 @@ import java.util.Map;
 import java.util.Optional;
 
 public interface UserService {
-    boolean signUp(Map<String, String> userData) throws ServiceException;
+    Optional<String> signUp(Map<String, String> userData) throws ServiceException;
     Optional<User> signIn(String login, String password) throws ServiceException;
+    Optional<User> findUserByLogin(String login) throws ServiceException;
+    boolean confirmRegistration(String login, String verificationCode) throws ServiceException;
+//    boolean blockUser(int userId) throws ServiceException;
 }

@@ -49,6 +49,11 @@ public class UserDaoImpl implements UserDao {
             INSERT INTO users (role_id, status, email, login, password, phone_number, first_name, last_name)
             values (?, ?, ?, ?, ?, ?, ?, ?)
             """;
+    private static final String UPDATE_USER_STATUS = """
+            UPDATE users
+            SET status = ?
+            WHERE user_id = ?
+            """;
     private static final UserDaoImpl INSTANCE = new UserDaoImpl();
     private final ConnectionPool pool = ConnectionPool.getInstance();
     private final UserRowMapper userMapper = UserRowMapper.getInstance();
@@ -110,16 +115,16 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public Optional<User> findUserByLoginOrEmail(String login, String email) throws DaoException {
+    public Optional<User> findUserByLoginOrEmail(String loginEmail) throws DaoException {
         try (var connection = pool.takeConnection();
              var preparedStatement = connection.prepareStatement(FIND_USER_BY_LOGIN_OR_EMAIL)) {
-            preparedStatement.setString(1, login);
-            preparedStatement.setString(2, email);
+            preparedStatement.setString(1, loginEmail);
+            preparedStatement.setString(2, loginEmail);
             try (var resultSet = preparedStatement.executeQuery()) {
                 return userMapper.mapRow(resultSet);
             }
         } catch (SQLException e) {
-            throw new DaoException("Failed to find user by login and password", e);
+            throw new DaoException("Failed to find user by login/email", e);
         }
     }
 
@@ -148,6 +153,18 @@ public class UserDaoImpl implements UserDao {
             return preparedStatement.executeUpdate() > 0;
         } catch (SQLException e) {
             throw new DaoException("Failed to create user", e);
+        }
+    }
+
+    @Override
+    public boolean updateUserStatus(long userId, User.Status status) throws DaoException {
+        try (var connection = pool.takeConnection();
+             var preparedStatement = connection.prepareStatement(UPDATE_USER_STATUS)) {
+            preparedStatement.setString(1, status.name());
+            preparedStatement.setLong(2, userId);
+            return preparedStatement.executeUpdate() > 0;
+        } catch (SQLException e) {
+            throw new DaoException("Failed to update user status", e);
         }
     }
 
