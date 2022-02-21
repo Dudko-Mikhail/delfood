@@ -5,7 +5,7 @@ import by.dudko.webproject.controller.RequestParameter;
 import by.dudko.webproject.controller.Router;
 import by.dudko.webproject.controller.SessionAttribute;
 import by.dudko.webproject.controller.command.Command;
-import by.dudko.webproject.controller.command.RequestAttribute;
+import by.dudko.webproject.controller.RequestAttribute;
 import by.dudko.webproject.exception.CommandException;
 import by.dudko.webproject.exception.ServiceException;
 import by.dudko.webproject.model.entity.Dish;
@@ -23,7 +23,7 @@ import org.apache.logging.log4j.Logger;
 import java.util.List;
 import java.util.Optional;
 
-public class GoToCategoryPage implements Command {
+public class GoToCategoryPage implements Command { // TODO add pagination
     private static final Logger logger = LogManager.getLogger();
     private final DishService dishService = DishServiceImpl.getInstance();
     private final DishCategoryService categoryService = DishCategoryServiceImpl.getInstance();
@@ -47,10 +47,9 @@ public class GoToCategoryPage implements Command {
             List<Dish> dishes = dishService.findDishesByCategoryIdAndLanguage(categoryId, sessionLanguage);
             request.setAttribute(RequestAttribute.DISHES, dishes);
             router = new Router(Router.RouteType.FORWARD, PagePath.CATEGORY_PAGE);
-        } catch (NumberFormatException e) { // FIXME после redirect страница становиться пустой (нет ни имени категории, ни товаров)
+        } catch (NumberFormatException e) { // TODO Что провильнее делать
             logger.warn("Attempt to execute GoToCategoryPage command with invalid category id");
-            String currentPage = (String) session.getAttribute(SessionAttribute.PAGE);
-            router = new Router(Router.RouteType.REDIRECT, currentPage);
+            router = new Router(HttpServletResponse.SC_NOT_FOUND);
         } catch (ServiceException e) {
             throw new CommandException("Failed to execute GoToCategoryPage command", e);
         }

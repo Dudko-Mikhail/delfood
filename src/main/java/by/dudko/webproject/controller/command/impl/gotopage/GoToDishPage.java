@@ -5,7 +5,7 @@ import by.dudko.webproject.controller.RequestParameter;
 import by.dudko.webproject.controller.Router;
 import by.dudko.webproject.controller.SessionAttribute;
 import by.dudko.webproject.controller.command.Command;
-import by.dudko.webproject.controller.command.RequestAttribute;
+import by.dudko.webproject.controller.RequestAttribute;
 import by.dudko.webproject.exception.CommandException;
 import by.dudko.webproject.exception.ServiceException;
 import by.dudko.webproject.model.entity.Dish;
@@ -92,10 +92,9 @@ public class GoToDishPage implements Command {
             }
             request.setAttribute(RequestAttribute.DISH, dish.get());
             return  new Router(Router.RouteType.FORWARD, PagePath.DISH_PAGE);
-        } catch (NumberFormatException e) {
+        } catch (NumberFormatException e) { // TODO Что провильнее делать
             logger.warn("Attempt to execute GoToDishPage command with invalid dish id");
-            String currentPage = (String) session.getAttribute(SessionAttribute.PAGE);
-            return new Router(Router.RouteType.REDIRECT, currentPage);
+            return new Router(HttpServletResponse.SC_NOT_FOUND);
         } catch (ServiceException e) {
             throw new CommandException("Failed to execute GoToDishPage command", e);
         }

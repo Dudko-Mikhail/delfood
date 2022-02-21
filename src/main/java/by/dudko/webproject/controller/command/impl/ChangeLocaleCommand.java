@@ -9,7 +9,7 @@ import by.dudko.webproject.util.LanguageProvider;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
-public class ChangeLocale implements Command {
+public class ChangeLocaleCommand implements Command {
     @Override
     public Router execute(HttpServletRequest request) {
         HttpSession session = request.getSession();
