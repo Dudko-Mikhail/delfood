@@ -67,7 +67,7 @@ public class ConnectionPool {
         try {
             Class.forName(DRIVER);
         } catch (ClassNotFoundException e) {
-            ExceptionInInitializerError error = new ExceptionInInitializerError(e);
+            var error = new ExceptionInInitializerError(e);
             logger.error("Cannot register driver", e);
             throw error;
         }
@@ -96,7 +96,8 @@ public class ConnectionPool {
         logger.info("Attempt to create pool connections");
         for (int i = freeConnections.size(); i < POOL_SIZE; i++) {
             try {
-                freeConnections.add(new ProxyConnection(DriverManager.getConnection(URL, USER_NAME, PASSWORD)));
+                var connection = new ProxyConnection(DriverManager.getConnection(URL, USER_NAME, PASSWORD));
+                freeConnections.add(connection);
             } catch (SQLException e) {
                 logger.error("Failed to create connection", e);
             }
