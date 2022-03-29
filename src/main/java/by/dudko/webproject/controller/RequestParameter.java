@@ -18,6 +18,7 @@ public final class RequestParameter {
 
     public static final String CATEGORY_ID = "category_id";
     public static final String DISH_ID = "dish_id";
+    public static final String AMOUNT = "amount";
 
     private RequestParameter() {}
 }

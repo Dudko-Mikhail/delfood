@@ -22,15 +22,15 @@ import java.util.Optional;
 
 public class GoToDishPage implements Command {
     private static final Logger logger = LogManager.getLogger();
+    private static final DishService dishService = DishServiceImpl.getInstance();
 
     @Override
-    public Router execute(HttpServletRequest request) throws CommandException { // TODO what is better??? 1, 2, 3
+    public Router execute(HttpServletRequest request) throws CommandException {
         HttpSession session = request.getSession();
         Router router;
         try {
             int dishId = Integer.parseInt(request.getParameter(RequestParameter.DISH_ID));
             Language sessionLanguage = (Language) session.getAttribute(SessionAttribute.LANGUAGE);
-            DishService dishService = DishServiceImpl.getInstance();
             Optional<Dish> dish = dishService.findDishByIdAndLanguage(dishId, sessionLanguage);
             if (dish.isEmpty()) {
                 String message = String.format("Failed to find translation for dish with id %d into %s language",
@@ -42,61 +42,10 @@ public class GoToDishPage implements Command {
             router = new Router(Router.RouteType.FORWARD, PagePath.DISH_PAGE);
         } catch (NumberFormatException e) {
             logger.warn("Attempt to execute GoToDishPage command with invalid dish id");
-            String currentPage = (String) session.getAttribute(SessionAttribute.PAGE);
-            router = new Router(Router.RouteType.REDIRECT, currentPage);
+            router = new Router(HttpServletResponse.SC_NOT_FOUND);
         } catch (ServiceException e) {
             throw new CommandException("Failed to execute GoToDishPage command", e);
         }
         return router;
-    }
-
-    public Router execute2(HttpServletRequest request) throws CommandException {
-        HttpSession session = request.getSession();
-        Router router;
-        try {
-            int dishId = Integer.parseInt(request.getParameter(RequestParameter.DISH_ID));
-            Language sessionLanguage = (Language) session.getAttribute(SessionAttribute.LANGUAGE);
-            DishService dishService = DishServiceImpl.getInstance();
-            Optional<Dish> dish = dishService.findDishByIdAndLanguage(dishId, sessionLanguage);
-            if (dish.isPresent()) {
-                request.setAttribute(RequestAttribute.DISH, dish.get());
-                router = new Router(Router.RouteType.FORWARD, PagePath.DISH_PAGE);
-            } else {
-                String message = String.format("Failed to find translation for dish with id %d into %s language",
-                        dishId, sessionLanguage.getName());
-                logger.error(message);
-                router = new Router(HttpServletResponse.SC_NOT_FOUND);
-            }
-        } catch (NumberFormatException e) {
-            logger.warn("Attempt to execute GoToDishPage command with invalid dish id");
-            String currentPage = (String) session.getAttribute(SessionAttribute.PAGE);
-            router = new Router(Router.RouteType.REDIRECT, currentPage);
-        } catch (ServiceException e) {
-            throw new CommandException("Failed to execute GoToDishPage command", e);
-        }
-        return router;
-    }
-
-    public Router execute3(HttpServletRequest request) throws CommandException {
-        HttpSession session = request.getSession();
-        try {
-            int dishId = Integer.parseInt(request.getParameter(RequestParameter.DISH_ID));
-            Language sessionLanguage = (Language) session.getAttribute(SessionAttribute.LANGUAGE);
-            DishService dishService = DishServiceImpl.getInstance();
-            Optional<Dish> dish = dishService.findDishByIdAndLanguage(dishId, sessionLanguage);
-            if (dish.isEmpty()) {
-                String message = String.format("Failed to find translation for dish with id %d into %s language",
-                        dishId, sessionLanguage.getName());
-                logger.error(message);
-                return new Router(HttpServletResponse.SC_NOT_FOUND);
-            }
-            request.setAttribute(RequestAttribute.DISH, dish.get());
-            return  new Router(Router.RouteType.FORWARD, PagePath.DISH_PAGE);
-        } catch (NumberFormatException e) { // TODO Что провильнее делать
-            logger.warn("Attempt to execute GoToDishPage command with invalid dish id");
-            return new Router(HttpServletResponse.SC_NOT_FOUND);
-        } catch (ServiceException e) {
-            throw new CommandException("Failed to execute GoToDishPage command", e);
-        }
     }
 }

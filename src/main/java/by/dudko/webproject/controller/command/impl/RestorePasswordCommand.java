@@ -12,6 +12,7 @@ public class RestorePasswordCommand implements Command { // TODO implement comma
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
         String email = request.getParameter(RequestParameter.EMAIL);
+
         String currentPage = (String) request.getSession().getAttribute(SessionAttribute.PAGE);
         if (currentPage == null) {
             currentPage = PagePath.HOME_PAGE;

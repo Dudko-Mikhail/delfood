@@ -25,8 +25,8 @@ import java.util.Optional;
 
 public class GoToCategoryPage implements Command { // TODO add pagination
     private static final Logger logger = LogManager.getLogger();
-    private final DishService dishService = DishServiceImpl.getInstance();
-    private final DishCategoryService categoryService = DishCategoryServiceImpl.getInstance();
+    private static final DishService dishService = DishServiceImpl.getInstance();
+    private static final DishCategoryService categoryService = DishCategoryServiceImpl.getInstance();
 
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {

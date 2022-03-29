@@ -17,11 +17,12 @@ import jakarta.servlet.http.HttpSession;
 import java.util.Optional;
 
 public class GoToProfilePage implements Command { // TODO implement
+    private static final UserService userService = UserServiceImpl.getInstance();
+
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
-        UserService userService = UserServiceImpl.getInstance();
         HttpSession session = request.getSession();
-        String login = (String) session.getAttribute(SessionAttribute.LOGIN);
+        String login = (String) session.getAttribute(SessionAttribute.USER_LOGIN);
         try {
             Optional<User> optionalUser = userService.findUserByLogin(login);
             if (optionalUser.isEmpty()) {

@@ -5,21 +5,16 @@ import by.dudko.webproject.controller.RequestAttribute;
 import by.dudko.webproject.controller.SessionAttribute;
 import by.dudko.webproject.controller.command.Command;
 import by.dudko.webproject.controller.Router;
-import by.dudko.webproject.controller.command.CommandType;
 import by.dudko.webproject.exception.CommandException;
 import by.dudko.webproject.exception.ServiceException;
-import by.dudko.webproject.model.entity.User;
 import by.dudko.webproject.model.service.UserService;
 import by.dudko.webproject.model.service.impl.UserServiceImpl;
-import by.dudko.webproject.util.encryption.Encryptor;
-import by.dudko.webproject.util.encryption.impl.EncryptorImpl;
-import by.dudko.webproject.util.mail.MailSender;
-import by.dudko.webproject.util.mail.MailTemplates;
+import by.dudko.webproject.util.mail.MailThreadFactory;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
 import java.util.HashMap;
-import java.util.Optional;
+import java.util.Map;
 
 import static by.dudko.webproject.controller.RequestParameter.LOGIN;
 import static by.dudko.webproject.controller.RequestParameter.EMAIL;
@@ -30,33 +25,42 @@ import static by.dudko.webproject.controller.RequestParameter.FIRST_NAME;
 import static by.dudko.webproject.controller.RequestParameter.LAST_NAME;
 
 public class SignUpCommand implements Command {
+    private static final UserService userService = UserServiceImpl.getInstance();
+
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
-        HashMap<String, String> userData = new HashMap<>(); // TODO подумать над способом поставки данных для валидатора
+        HashMap<String, String> userData = new HashMap<>();
+        String email = request.getParameter(EMAIL);
         userData.put(LOGIN, request.getParameter(LOGIN));
-        userData.put(EMAIL, request.getParameter(EMAIL));
+        userData.put(EMAIL, email);
         userData.put(PASSWORD, request.getParameter(PASSWORD));
         userData.put(REPEAT_PASSWORD, request.getParameter(REPEAT_PASSWORD));
         userData.put(PHONE_NUMBER, request.getParameter(PHONE_NUMBER));
         userData.put(FIRST_NAME, request.getParameter(FIRST_NAME));
         userData.put(LAST_NAME, request.getParameter(LAST_NAME));
+        HttpSession session = request.getSession();
         try {
-            UserService userService = UserServiceImpl.getInstance();
-            Optional<String> verificationCode = userService.signUp(userData);
-            HttpSession session = request.getSession();
-            String currentPage = (String) session.getAttribute(SessionAttribute.PAGE);
-            if (currentPage == null) {
-                currentPage = PagePath.HOME_PAGE;
+            Map<String, String> validationReport = userService.signUp(userData);
+            boolean isRegistered = validationReport.isEmpty();
+            if (isRegistered) { // TODO повтор кода (sendEmailVerificationMessageCommand)
+                String verificationCode = userService.generateUserVerificationCodeByEmail(email);
+                StringBuffer controllerUrl = request.getRequestURL();
+                Thread sender = MailThreadFactory.createConfirmRegistrationSender(controllerUrl, email, verificationCode); // TODO Think about this thread
+                sender.start();
+                request.setAttribute(RequestAttribute.EMAIL_TO_VERIFY, email);
             }
-            if (verificationCode.isPresent()) { // TODO success registration action. Add mail logic and redirect to confirmation page
-                String mail = MailTemplates.compileConfirmRegistrationTemplate(request.getRequestURL(),
-                        userData.get(LOGIN), verificationCode.get());
-                MailSender.getInstance().send(userData.get(EMAIL), "Authorization", mail);
+            else {
+                userData.forEach(request::setAttribute);
+                validationReport.forEach(request::setAttribute);
             }
-            request.setAttribute(RequestAttribute.SIGN_UP_RESULT, verificationCode.isPresent());
-            return new Router(Router.RouteType.FORWARD, currentPage);
+            request.setAttribute(RequestAttribute.SIGN_UP_RESULT, isRegistered);
         } catch (ServiceException e) {
             throw new CommandException("Failed to execute SignUp command", e);
         }
+        String currentPage = (String) session.getAttribute(SessionAttribute.PAGE);
+        if (currentPage == null) {
+            currentPage = PagePath.HOME_PAGE;
+        }
+        return new Router(Router.RouteType.FORWARD, currentPage);
     }
 }

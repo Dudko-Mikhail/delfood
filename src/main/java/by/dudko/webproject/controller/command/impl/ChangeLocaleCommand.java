@@ -18,6 +18,9 @@ public class ChangeLocaleCommand implements Command {
         session.setAttribute(SessionAttribute.LANGUAGE, newLanguage);
 
         String referer = request.getHeader("referer");
+        if (!referer.contains("command")) { // TODO what should i do ?  Был post запрос. Referer заканчивается на controller
+            return new Router(Router.RouteType.REDIRECT, (String) session.getAttribute(SessionAttribute.PAGE));
+        }
         return new Router(Router.RouteType.REDIRECT, referer);
     }
 }
