@@ -4,12 +4,14 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public class Order extends RootEntity { // todo fields and about price
+public class Order extends RootEntity<Long> { // todo fields and about price
     private long userId;
     private OrderStatus orderStatus;
     private LocalDateTime orderDate;
     private BigDecimal price;
     private List<OrderItem> orderItems;
+
+    public Order() {}
 
     public Order(long id, long userId, OrderStatus orderStatus, LocalDateTime orderDate,
                  BigDecimal price, List<OrderItem> orderItems) {

@@ -28,11 +28,14 @@ public class OrderItem implements Serializable {
         this.amount = amount;
     }
 
+    public void increaseAmount(int value) {
+        amount += value;
+    }
+
     public BigDecimal calculateItemPrice() { // TODO check method
-        BigDecimal dishPrice = dish.getPrice();
-        BigDecimal discountAmount = dish.getDiscount().multiply(dishPrice);
-        return dishPrice.subtract(discountAmount)
-                    .multiply(new BigDecimal(amount));
+        BigDecimal realDishPrice = dish.calculateDiscountedPrice();
+        BigDecimal productAmount = new BigDecimal(amount);
+        return realDishPrice.multiply(productAmount);
     }
 
     @Override

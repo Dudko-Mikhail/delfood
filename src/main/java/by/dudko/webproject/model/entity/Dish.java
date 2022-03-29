@@ -33,6 +33,11 @@ public class Dish extends RootEntity<Integer> {
         this.discount = discount;
     }
 
+    public BigDecimal calculateDiscountedPrice() {
+        BigDecimal discountAmount = price.multiply(discount);
+        return price.subtract(discountAmount);
+    }
+
     public int getWeight() {
         return weight;
     }
