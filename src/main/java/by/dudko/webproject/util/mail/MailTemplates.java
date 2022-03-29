@@ -29,21 +29,22 @@ public class MailTemplates {
             <p>The Delfood company</p>
             """;
 
-    public static String compilePasswordRecoveryTemplate(StringBuffer controllerUrl, String userEmail) { // Maybe class request builder
+    public static String compilePasswordRecoveryTemplate(StringBuffer controllerUrl, String recipient) { // Maybe class request builder
         String link = controllerUrl.append("?").append(RequestParameter.COMMAND)
                 .append("=").append(CommandType.RESTORE_PASSWORD.name())
                 .append("&").append(RequestParameter.EMAIL)
-                .append("=").append(userEmail)
+                .append("=").append(recipient)
                 .toString();
         return String.format(PASSWORD_RECOVERY_TEMPLATE, link);
     }
 
-    public static String compileConfirmRegistrationTemplate(StringBuffer controllerUrl, String login,
+    public static String compileConfirmRegistrationTemplate(StringBuffer controllerUrl, String recipient,
                                                             String verificationCode) {
+
         String link = controllerUrl.append("?").append(RequestParameter.COMMAND)
                 .append("=").append(CommandType.CONFIRM_REGISTRATION.name())
-                .append("&").append(RequestParameter.LOGIN)
-                .append("=").append(login)
+                .append("&").append(RequestParameter.EMAIL)
+                .append("=").append(recipient)
                 .append("&").append(RequestParameter.VERIFICATION_CODE)
                 .append("=").append(verificationCode)
                 .toString();
