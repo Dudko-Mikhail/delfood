@@ -1,0 +1,33 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@include file="../imports.jspf" %>
+
+<fmt:message var="account_activation_header" key="header.account_activation"/>
+<fmt:message var="congratulations" key="message.success.mail_verification"/>
+<fmt:message var="sign_in_advice" key="message.you_can_sign_in"/>
+<fmt:message var="sign_in" key="action.sign_in"/>
+<fmt:message var="cancel" key="action.cancel"/>
+
+<div class="modal fade" id="account_activation" tabindex="-1"
+     aria-labelledby="account_activation_label" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="bg-light modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="account_activation_label">${account_activation_header}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="${cancel}"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-2">${congratulations}</div>
+                <div>${sign_in_advice}</div>
+            </div>
+            <div class="modal-footer align-items-center">
+                <div class="col">
+                    <button type="button" class="w-100 btn btn-primary" data-bs-toggle="modal"
+                            data-bs-target="#sign_in_modal">${sign_in}</button>
+                </div>
+                <div class="col">
+                    <button type="button" class="w-100 btn btn-danger" data-bs-dismiss="modal">${cancel}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

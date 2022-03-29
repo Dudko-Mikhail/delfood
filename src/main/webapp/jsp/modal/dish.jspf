@@ -1,0 +1,21 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@include file="../imports.jspf"%>
+
+<fmt:message var="add_to_cart" key="action.add_to_cart"/>
+<fmt:message var="close" key="action.close"/>
+
+<div class="modal fade" id="add_to_cart_modal" tabindex="-1"
+     aria-labelledby="blocked_account_label" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="bg-light modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="blocked_account_label">${requestScope.dish.name}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="${close}"></button>
+            </div>
+            <div class="modal-body">
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,25 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@include file="../imports.jspf" %>
+
+<fmt:message var="blocked_account_header" key="header.blocked_account"/>
+<fmt:message var="blocke_account_message" key="message.blocked_account"/>
+<fmt:message var="sign_in" key="action.sign_in"/>
+<fmt:message var="close" key="action.close"/>
+
+<div class="modal fade" id="blocked_account" tabindex="-1"
+     aria-labelledby="blocked_account_label" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="bg-light modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="blocked_account_label">${blocked_account_header}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="${close}"></button>
+            </div>
+            <div class="modal-body">
+                <div>${blocke_account_message}</div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="w-100 btn btn-danger" data-bs-dismiss="modal">${close}</button>
+            </div>
+        </div>
+    </div>
+</div>

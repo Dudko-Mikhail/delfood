@@ -1,19 +1,39 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="../imports.jspf" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
 <fmt:message scope="page" var="title" key="page.title.sign_up"/>
-<fmt:message var="login" key="label.login"/>
-<fmt:message var="email" key="label.email"/>
-<fmt:message var="password" key="label.password"/>
-<fmt:message var="repeat_password" key="label.repeat_password"/>
-<fmt:message var="first_name" key="label.first_name"/>
-<fmt:message var="last_name" key="label.last_name"/>
-<fmt:message var="phone_number" key="label.phone_number"/>
+<fmt:message var="login_label" key="label.login"/>
+<fmt:message var="email_label" key="label.email"/>
+<fmt:message var="password_label" key="label.password"/>
+<fmt:message var="confirm_password_label" key="label.confirm_password"/>
+<fmt:message var="first_name_label" key="label.first_name"/>
+<fmt:message var="last_name_label" key="label.last_name"/>
+<fmt:message var="phone_number_label" key="label.phone_number"/>
 <fmt:message var="sign_up" key="action.sign_up"/>
 <fmt:message var="sign_up_header" key="header.sign_up"/>
 <fmt:message var="have_account" key="label.already_have_account"/>
 <fmt:message var="sign_in" key="action.sign_in"/>
 <fmt:message var="cancel" key="action.cancel"/>
+<fmt:message var="close" key="action.close"/>
+<fmt:message var="password_info" key="message.info.password"/>
+<fmt:message var="login_info" key="message.info.login"/>
+<fmt:message var="email_info" key="message.info.email"/>
+<fmt:message var="email_too_long" key="message.invalid.email.max_length"/>
+<fmt:message var="email_invalid_format" key="message.invalid.email.pattern"/>
+<fmt:message var="email_exists" key="message.email_exists"/>
+<fmt:message var="login_too_long" key="message.invalid.login.max_length"/>
+<fmt:message var="login_ivalid_format" key="message.invalid.login.pattern"/>
+<fmt:message var="login_exists" key="message.login_exists"/>
+<fmt:message var="initials_invalid_format" key="message.invalid.initials.format"/>
+<fmt:message var="initials_too_long" key="message.invalid.initials.max_length"/>
+<fmt:message var="phone_number_too_long" key="message.invalid.phone_number.max_length"/>
+<fmt:message var="phone_number_format" key="message.invalid.phone_number.format"/>
+<fmt:message var="password_need_digit" key="message.invalid.password.need_digit"/>
+<fmt:message var="password_special_character" key="message.invalid.password.special_character"/>
+<fmt:message var="password_too_short" key="message.invalid.password.min_length"/>
+<fmt:message var="password_mismatch" key="message.invalid.password_repeat"/>
+<fmt:message var="blank_field" key="message.not_empty"/>
 
 <div class="modal fade" data-bs-backdrop="static" id="sign_up_modal" tabindex="-1" aria-labelledby="sign_up_label"
      aria-hidden="true">
@@ -21,56 +41,137 @@
         <div class="bg-light modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="sign_up_label">${sign_up_header}</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="${cancel}"></button>
+                <button type="reset" form="sign_up_form" class="btn-close" data-bs-dismiss="modal"
+                        aria-label="${close}"></button>
             </div>
             <div class="bg-light modal-body">
-                <form class="px-3" action="${pageContext.request.contextPath}/controller" method="post">
-                    <input type="hidden" id="command" name="command" value="sign_up">
+                <form class="px-3 needs-validation" id="sign_up_form"
+                      action="${pageContext.request.contextPath}/controller" method="post" autocomplete="off"
+                      novalidate>
+                    <input type="hidden" name="command" value="sign_up"/>
 
                     <div class="mb-2">
-                        <label for="login" class="form-label">${login}</label>
-                        <input type="text" class="form-control" id="login" name="login" required/>
+                        <label for="login" class="form-label">${login_label}*</label>
+                        <input type="text" maxlength="20" class="form-control temp" id="login" name="login"
+                               value="${fn:escapeXml(login)}" required/>
+                        <div class="form-text help">${login_info}</div>
+                        <div class="error text-danger">
+                            <div class="pattern">${login_ivalid_format}</div>
+                            <div class="long">${login_too_long}</div>
+                            <div class="exists">${login_exists}</div>
+                            <div class="empty">${blank_field}</div>
+                            <c:forEach var="errorMessage" items="${invalid_login}">
+                                <div class="temp active">
+                                    <fmt:message key="${errorMessage}"/>
+                                </div>
+                            </c:forEach>
+                        </div>
                     </div>
 
                     <div class="mb-2">
-                        <label for="email" class="form-label">${email}</label>
-                        <input type="email" class="form-control" id="email" name="email" placeholder="email@example.com"
-                               required/>
+                        <label for="email" class="form-label">${email_label}*</label>
+                        <input type="email" maxlength="45" class="form-control temp" id="email" name="email"
+                               value="${fn:escapeXml(email)}" required/>
+                        <div class="form-text help">${email_info}</div>
+                        <div class="error text-danger">
+                            <div class="pattern">${email_invalid_format}</div>
+                            <div class="long">${email_too_long}</div>
+                            <div class="exists">${email_exists}</div>
+                            <div class="empty">${blank_field}</div>
+                            <c:forEach var="errorMessage" items="${invalid_email}">
+                                <div class="temp active">
+                                    <fmt:message key="${errorMessage}"/>
+                                </div>
+                            </c:forEach>
+                        </div>
                     </div>
 
                     <div class="mb-2">
-                        <label for="first_name" class="form-label">${first_name}</label>
-                        <input type="text" class="form-control" id="first_name" name="first_name"/>
+                        <label for="first_name" class="form-label">${first_name_label}</label>
+                        <input type="text" maxlength="20" class="form-control temp" id="first_name" name="first_name"
+                               value="${fn:escapeXml(first_name)}"/>
+                        <div class="error text-danger">
+                            <div class="pattern">${initials_invalid_format}</div>
+                            <div class="long">${initials_too_long}</div>
+                            <c:forEach var="errorMessage" items="${invalid_first_name}">
+                                <div class="temp active">
+                                    <fmt:message key="${errorMessage}"/>
+                                </div>
+                            </c:forEach>
+                        </div>
                     </div>
 
                     <div class="mb-2">
-                        <label for="last_name" class="form-label">${last_name}</label>
-                        <input type="text" class="form-control" id="last_name" name="last_name"/>
+                        <label for="last_name" class="form-label">${last_name_label}</label>
+                        <input type="text" maxlength="20" class="form-control temp" id="last_name" name="last_name"
+                               value="${fn:escapeXml(last_name)}"/>
+                        <div class="error text-danger">
+                            <div class="pattern">${initials_invalid_format}</div>
+                            <div class="long">${initials_too_long}</div>
+                            <c:forEach var="errorMessage" items="${invalid_last_name}">
+                                <div class="temp active">
+                                    <fmt:message key="${errorMessage}"/>
+                                </div>
+                            </c:forEach>
+                        </div>
                     </div>
 
                     <div class="mb-2">
-                        <label for="phone_number" class="form-label">${phone_number}</label>
-                        <input type="tel" class="form-control" id="phone_number" name="phone_number" required/>
+                        <label for="phone_number" class="form-label">${phone_number_label}*</label>
+                        <input type="tel" class="form-control temp" id="phone_number" name="phone_number"
+                               value="${fn:escapeXml(phone_number)}" required/>
+                        <div class="error text-danger">
+                            <div class="pattern">${phone_number_format}</div>
+                            <div class="long">${phone_number_too_long}</div>
+                            <div class="empty">${blank_field}</div>
+                            <c:forEach var="errorMessage" items="${invalid_phone_number}">
+                                <div class="temp active">
+                                    <fmt:message key="${errorMessage}"/>
+                                </div>
+                            </c:forEach>
+                        </div>
                     </div>
 
                     <div class="mb-2">
-                        <label for="password" class="form-label">${password}</label>
-                        <input type="password" class="form-control" id="password" name="password" required>
+                        <label for="password" class="form-label">${password_label}*</label>
+                        <input type="password" minlength="4" class="form-control temp" id="password" name="password"
+                               value="${fn:escapeXml(password)}" required/>
+                        <div class="form-text help">${password_info}</div>
+                        <div class="error text-danger">
+                            <div class="need_digit">${password_need_digit}</div>
+                            <div class="need_special_character">${password_special_character}</div>
+                            <div class="short">${password_too_short}</div>
+                            <div class="empty">${blank_field}</div>
+                            <c:forEach var="errorMessage" items="${invalid_password}">
+                                <div class="temp active">
+                                    <fmt:message key="${errorMessage}"/>
+                                </div>
+                            </c:forEach>
+                        </div>
                     </div>
 
                     <div class="mb-3">
-                        <label for="repeat_password" class="form-label">${repeat_password}</label>
-                        <input type="password" class="form-control" id="repeat_password" name="repeat_password"
-                               required>
+                        <label for="repeat_password" class="form-label">${confirm_password_label}*</label>
+                        <input type="password" class="form-control temp" id="repeat_password" name="repeat_password"
+                               value="${fn:escapeXml(repeat_password)}" required/>
+                        <div class="error text-danger">
+                            <div class="common">${password_mismatch}</div>
+                            <div class="empty">${blank_field}</div>
+                        </div>
+                        <c:forEach var="errorMessage" items="${invalid_password_repeat}">
+                            <div class="temp active">
+                                <fmt:message key="${errorMessage}"/>
+                            </div>
+                        </c:forEach>
                     </div>
 
                     <div class="row">
                         <div class="col">
-                            <button class="w-100 btn btn-primary" type="submit">${sign_up}</button>
+                            <button type="submit" class="w-100 btn btn-primary">${sign_up}</button>
                         </div>
                         <div class="col">
-                            <button class="w-100 btn btn-danger" data-bs-dismiss="modal"
-                                    type="button">${cancel}</button>
+                            <button type="reset" class="w-100 btn btn-danger"
+                                    data-bs-dismiss="modal">${cancel}</button>
                         </div>
                     </div>
                 </form>
@@ -82,3 +183,7 @@
         </div>
     </div>
 </div>
+
+
+<%-- TODO remove foreach and refactor errors --%>
+<%-- TODO refactor this page!!! --%>

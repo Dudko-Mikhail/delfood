@@ -31,12 +31,12 @@
             </nav>
             <ul class="menu__list">
                 <c:choose>
-                    <c:when test="${login ne null}">
+                    <c:when test="${sessionScope.user_login ne null}">
                         <li>
                             <div class="dropdown">
                                 <a href="#" class="menu__link dropdown-toggle" id="user_menu"
                                    data-bs-toggle="dropdown" aria-expanded="false">
-                                    <span>${login}</span>
+                                    <span>${sessionScope.user_login}</span>
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="user_menu">
                                     <li>
@@ -71,7 +71,7 @@
                         <img src="${absolutePath}/img/planet.png" alt="localization">
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="localization">
-                        <c:forEach var="locale" items="${languages}">
+                        <c:forEach var="locale" items="${sessionScope.languages}">
                             <li><a class="dropdown-item"
                                    href="${absolutePath}/controller?command=change_locale&language=${locale}">${locale}</a>
                             </li>
@@ -88,14 +88,11 @@
     </div>
 </header>
 
-<c:if test="${login eq null}">
+<c:if test="${sessionScope.user_login eq null}">
     <!-- Modal Sign In -->
     <%@include file="../modal/sign_in.jspf" %>
-    <!-- -->
-
     <!-- Modal Sign Up -->
     <%@include file="../modal/sign_up.jspf" %>
-    <!-- -->
 </c:if>
 
 <div class="wrapper">

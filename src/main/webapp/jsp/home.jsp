@@ -17,14 +17,57 @@
 <body>
 <jsp:include page="common/header.jsp"/>
 <div class="container">
+
     <div class="row">
         <ul>
-            <li><a href="${absolutePath}/jsp/sign_in.jsp">Sign In</a></li>
             <li><a href="${absolutePath}/controller?command=go_to_sign_up_page">Sign Up</a></li>
             <li><a href="${absolutePath}/controller?command=sign_out">Sign Out</a></li>
         </ul>
+        <form>
+            <label for="test_input" class="form-label">Experiment input</label>
+            <input type="text" id="test_input" class="mb-2 bg-light form-control"/>
+        </form>
+        <div class="form-label">Ajax response:</div>
+        <div id="answer"></div>
+    </div>
+
+    <div>
+        <h2>Order items:</h2>
+        <c:out value="${order_items}"/>
     </div>
 </div>
 <jsp:include page="common/footer.jsp"/>
+<script>
+    $(document).ready(function () {
+        if (!String.prototype.format) {
+            String.prototype.format = function() {
+                let args = arguments;
+                return this.replace(/{(\d+)}/g, function(match, number) {
+                    return typeof args[number] != 'undefined'
+                        ? args[number]
+                        : match;
+                });
+            };
+        }
+
+        $('#test_input').blur(function () {
+            query();
+        })
+
+        function query() {
+            $.ajax({
+                method: "POST",
+                url: "${absolutePath}/localization",
+                dataType: "text",
+                data: {
+                    key: $('#test_input').val()
+                },
+                success: function(responseText) {
+                    $('#answer').html(responseText);
+                }
+            });
+        }
+    })
+</script>
 </body>
 </html>

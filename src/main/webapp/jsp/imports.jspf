@@ -1,5 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <c:set var="absolutePath">${pageContext.request.contextPath}</c:set>
+<fmt:setLocale scope="session" value="${sessionScope.language.name}"/>
 <fmt:setBundle scope="session" basename="localization.localized_data"/>
-<fmt:setLocale scope="session" value="${language.name}"/>

@@ -1,6 +1,9 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="imports.jspf" %>
 
+<fmt:message var="add_to_cart" key="action.add_to_cart"/>
+<c:set var="dish" scope="page" value="${requestScope.dish}">
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -13,7 +16,7 @@
 </head>
 <body>
 <jsp:include page="common/header.jsp"/>
-<div>
+<div class="container">
     <h2>Dish characteristics</h2>
     <p>${dish.name}</p>
     <p>${dish.category}</p>
@@ -21,7 +24,17 @@
     <p>${dish.description}</p>
     <p>${dish.price}</p>
     <p>${dish.discount}</p>
-    <p>${dish.imageUrl}</p>
+    <div class="scalable__image">
+        <c:choose>
+            <c:when test="${dish.imageUrl ne null}">
+                <img src="${dish.imageUrl}" alt="dishImage">
+            </c:when>
+            <c:otherwise>
+                <img src="${absolutePath}/img/default_dish.png" alt="dishImage">
+            </c:otherwise>
+        </c:choose>
+    </div>
+    <a href="${absolutePath}/controller?command=add_order_item&dish_id=${dish.id}&amount=1" class="btn btn-warning">${add_to_cart}</a>
 </div>
 <jsp:include page="common/footer.jsp"/>
 </body>

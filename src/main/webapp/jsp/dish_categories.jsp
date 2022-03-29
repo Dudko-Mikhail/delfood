@@ -17,11 +17,11 @@
 <jsp:include page="common/header.jsp"/>
 <div class="container">
     <div class="row row-cols-1 row-cols-md-2">
-    <c:forEach var="category" items="${dish_categories}">
+    <c:forEach var="category" items="${requestScope.dish_categories}">
         <div class="col mb-2">
             <a href="${absolutePath}/controller?command=go_to_category_page&category_id=${category.id}" class="text-decoration-none">
                 <div class="text-center text-black fs-4">${category.name}</div>
-                <div class="category_image">
+                <div class="scalable__image">
                     <img src="${category.imageUrl}" alt="Category image"/>
                 </div>
             </a>
