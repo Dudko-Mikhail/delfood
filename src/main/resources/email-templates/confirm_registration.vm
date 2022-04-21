@@ -1,0 +1,11 @@
+<body>
+    <h1>Welcome to DelFood</h1>
+    <hr/>
+    <p style="margin-bottom: 10px">Please, click the link below to verify your email address</p>
+    <a href="$verificationLink" style="margin-bottom: 10px">Verify email</a>
+    <hr/>
+    <footer>
+        <p>All the best</p>
+        <p>The DelFood company</p>
+    </footer>
+</body>
