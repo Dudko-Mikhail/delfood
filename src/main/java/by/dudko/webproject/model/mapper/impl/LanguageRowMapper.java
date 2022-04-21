@@ -23,9 +23,9 @@ public class LanguageRowMapper implements RowMapper<Language> {
     public Optional<Language> mapRow(ResultSet resultSet) {
         try {
             if (resultSet.next()) {
-                Language language = new Language();
+                String languageName = resultSet.getString(LANGUAGE_NAME);
+                Language language = new Language(languageName);
                 language.setId(resultSet.getInt(LANGUAGE_ID));
-                language.setName(resultSet.getString(LANGUAGE_NAME));
                 return Optional.of(language);
             }
         } catch (SQLException e) {

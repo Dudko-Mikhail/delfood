@@ -1,9 +1,9 @@
 package by.dudko.webproject.model.entity;
 
-public class Language extends RootEntity<Integer> {
-    private String name;
+import java.util.Locale;
 
-    public Language() {}
+public class Language extends RootEntity<Integer> {
+    private final String name;
 
     public Language(String name) {
         this.name = name;
@@ -13,8 +13,8 @@ public class Language extends RootEntity<Integer> {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public Locale toLocale() {
+        return Locale.forLanguageTag(name.replace("_", "-"));
     }
 
     @Override
