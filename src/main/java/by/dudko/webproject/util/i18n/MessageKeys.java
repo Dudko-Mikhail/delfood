@@ -1,4 +1,4 @@
-package by.dudko.webproject.util;
+package by.dudko.webproject.util.i18n;
 
 public final class MessageKeys { // todo надо куда-то переместить
 

@@ -3,6 +3,7 @@ package by.dudko.webproject.util.mail;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javax.mail.Address;
 import javax.mail.Authenticator;
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -16,12 +17,20 @@ import java.io.InputStream;
 import java.util.Properties;
 
 public class MailSender {
-    private static final Logger logger = LogManager.getLogger();
     private static final String MAIL_PROPERTY_PATH = "config/mail.properties";
     private static final String MAIL_USER_NAME = "mail.user.name";
     private static final String MAIL_USER_PASSWORD = "mail.user.password";
-    private final Properties mailProperties;
+    private static final String CONTENT_TYPE = "text/html; charset=UTF-8";
+    private static final Logger logger = LogManager.getLogger();
     private static MailSender instance;
+    private final Properties mailProperties;
+
+    public static MailSender getInstance() {
+        if (instance == null) {
+            instance = new MailSender();
+        }
+        return instance;
+    }
 
     private MailSender() {
         try {
@@ -34,19 +43,13 @@ public class MailSender {
         }
     }
 
-    public static MailSender getInstance() {
-        if (instance == null) {
-            instance = new MailSender();
-        }
-        return instance;
-    }
-
     public void send(String mailRecipient, String mailSubject, String mailContent) {
         try {
             MimeMessage message = new MimeMessage(createSession());
             message.addRecipient(Message.RecipientType.TO, new InternetAddress(mailRecipient));
-            message.setSubject(mailSubject);
-            message.setContent(mailContent, "text/html");
+            message.setHeader("Content-Type", CONTENT_TYPE);
+            message.setSubject(mailSubject, "UTF-8");
+            message.setContent(mailContent, CONTENT_TYPE);
             Transport.send(message);
         } catch (MessagingException e) {
             logger.error(String.format("Failed to send the message to %s", mailRecipient), e);

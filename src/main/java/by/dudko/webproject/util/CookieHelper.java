@@ -4,9 +4,10 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 public final class CookieHelper {
-    public static final int COOKIE_LIFE_TIME = 60 * 60 * 24 * 7;
+    public static final int COOKIE_LIFE_TIME = (int) TimeUnit.DAYS.toSeconds(7);
 
     public static Optional<Cookie> findCookieByName(String cookieName, HttpServletRequest request) {
         Cookie[] cookies = request.getCookies();
