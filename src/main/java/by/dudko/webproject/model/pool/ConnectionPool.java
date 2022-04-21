@@ -7,6 +7,7 @@ import org.apache.logging.log4j.Logger;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingDeque;
@@ -29,17 +30,23 @@ public class ConnectionPool {
     private final BlockingQueue<ProxyConnection> givenAwayConnections;
 
     static {
-        ResourceBundle bundle = ResourceBundle.getBundle("config/database");
-        USER_NAME = bundle.getString("db.userName");
-        PASSWORD = bundle.getString("db.password");
-        DRIVER = bundle.getString("db.driver");
-        URL = bundle.getString("db.url");
-        if (bundle.containsKey("db.poolSize")) {
-            POOL_SIZE = Integer.parseInt(bundle.getString("db.poolSize"));
+        try {
+            ResourceBundle bundle = ResourceBundle.getBundle("config/database");
+            USER_NAME = bundle.getString("db.userName");
+            PASSWORD = bundle.getString("db.password");
+            DRIVER = bundle.getString("db.driver");
+            URL = bundle.getString("db.url");
+            if (bundle.containsKey("db.poolSize")) {
+                POOL_SIZE = Integer.parseInt(bundle.getString("db.poolSize"));
+            }
+            else {
+                POOL_SIZE = DEFAULT_POOL_SIZE;
+            }
+        } catch (MissingResourceException e) {
+            logger.fatal("Failed to find pool configuration file", e);
+            throw new ExceptionInInitializerError(e);
         }
-        else {
-            POOL_SIZE = DEFAULT_POOL_SIZE;
-        }
+
         lock = new ReentrantLock();
         isCreated = new AtomicBoolean();
     }
