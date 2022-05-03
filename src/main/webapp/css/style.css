@@ -1,5 +1,16 @@
+html {
+    height: 100%;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+}
+
 /* image container */
 .scalable__image {
+    margin: 4px auto;
     padding: 0 0 58% 0;
     overflow: hidden;
     position: relative;
@@ -17,26 +28,23 @@
 }
 
 .wrapper {
+    font-size: 1.1rem;
     background-color: rgb(248, 249, 250);
-    min-height: calc(100vh - 80px); /* TODO 100vh - footer height. Поработать с высотой */
-    padding-top: 80px;
-}
-
-@media (max-width: 767px) {
-    .wrapper {
-        padding-top: 60px;
-    }
+    flex: 1;
+    padding: 10px 0;
 }
 
 /* Header */
 
 .header {
-    position: fixed;
+    position: sticky;
     font-size: 1.2rem;
     left: 0;
     top: 0;
     width: 100%;
+    height: 100%;
     z-index: 10;
+    padding: 10px 0;
 }
 
 .header:before {
@@ -45,7 +53,7 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgb(170, 0, 0);;
+    background-color: rgb(170, 0, 0);
     content: '';
     z-index: 2;
 }
@@ -54,7 +62,6 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    height: 70px;
     position: relative;
     background-color: rgb(170, 0, 0);
 }
@@ -119,8 +126,8 @@
         overflow: hidden;
     }
 
-    .header__body {
-        height: 50px;
+    .header {
+        padding: 5px 0;
     }
 
     .burger__menu {
@@ -206,7 +213,16 @@
     }
 }
 
+.language__list > li {
+    border-bottom: 1px solid rgba(0,0,0,.15);
+}
+
+.language__list > li:last-child {
+    border-bottom: none;
+}
+
 .footer {
+    padding: 8px 0;
     background-color: rgba(24, 24, 24, 0.9);
 }
 
@@ -246,4 +262,155 @@ input:focus ~ .help {
 
 .light__blue {
     background-color: #0d6efd05;
+}
+
+.dish__icon img {
+    width: 70px;
+    height: 70px;
+    object-fit: cover;
+    border-radius: 5px;
+}
+
+.currency {
+    margin-left: 2px;
+}
+
+.cart__items__wrapper {
+    border: 1px solid lightgrey;
+    border-radius: 10px;
+}
+
+.cart__item {
+    border-bottom: 1px solid lightgray;
+    display: flex;
+    align-items: center;
+}
+
+.error__code {
+    font-size: 7rem;
+    text-align: center;
+}
+
+.error__message {
+    font-size: 24px;
+    text-align: center;
+}
+
+.item__container {
+    display: flex;
+    flex-direction: column;
+    max-width: 480px;
+}
+
+.dish__name {
+    word-wrap: break-word;
+    text-align: center;
+}
+
+@media (max-width: 576px) {
+    .item__container {
+        margin: 0 auto;
+    }
+}
+
+.dish__content {
+    flex: 1;
+}
+
+.dish__footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.add__to__cart {
+    background-color: #B9141BFF;
+    min-height: 36px;
+    min-width: 108px;
+    border-radius: 5px;
+    color: white;
+    padding: 2px 5px;
+    border-width: 0;
+}
+
+.quantity__counter {
+    display: flex;
+    align-items: center;
+}
+
+.counter__button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 36px;
+    min-height: 36px;
+    color: white;
+    background-color: #B9141BFF;
+    border-width: 0;
+}
+
+.counter__button:hover, .add__to__cart:hover {
+    background-color: #F9141BFA;
+    transition: all 0.4s ease 0s;
+}
+
+.counter__button[data-action="decrease"] {
+    border-radius: 5px 0 0 5px;
+}
+
+.quantity {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 36px;
+    min-width: 36px;
+    border-bottom: 1px solid lightgray;
+    border-top: 1px solid lightgray;
+    padding: 2px 5px;
+}
+
+.counter__button[data-action="increase"] {
+    border-radius: 0 5px 5px 0;
+}
+
+.config {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.timer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.timer span {
+    font-size: 3rem;
+    color: black;
+}
+
+.big__circle, .small__circle {
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.big__circle {
+    position: relative;
+    width: 200px;
+    height: 200px;
+    background: conic-gradient(red, 0deg, green, 0deg, yellow);
+}
+
+.small__circle {
+    position: absolute;
+    width: 70%;
+    height: 70%;
+    left: 15%;
+    top: 15%;
+    z-index: 10;
+    background-color: white;
 }
