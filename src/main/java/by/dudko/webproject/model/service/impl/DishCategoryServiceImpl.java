@@ -20,18 +20,18 @@ public class DishCategoryServiceImpl implements DishCategoryService {
     }
 
     @Override
-    public List<DishCategory> findAllCategoriesByLanguage(Language language) throws ServiceException {
+    public List<DishCategory> findAllCategoriesByLanguageId(int languageId) throws ServiceException {
         try {
-            return categoryDao.findAllByLanguage(language);
+            return categoryDao.findAllByLanguageId(languageId);
         } catch (DaoException e) {
             throw new ServiceException("Failed to find categories by language", e);
         }
     }
 
     @Override
-    public Optional<String> findCategoryNameByIdAndLanguage(int categoryId, Language language) throws ServiceException {
+    public Optional<String> findCategoryNameByIdAndLanguageId(int categoryId, int languageId) throws ServiceException {
         try {
-            Optional<DishCategory> category = categoryDao.findByIdAndLanguage(categoryId, language);
+            Optional<DishCategory> category = categoryDao.findByIdAndLanguageId(categoryId, languageId);
             return category.map(DishCategory::getName);
         } catch (DaoException e) {
             throw new ServiceException("Failed to find category name by id and language");

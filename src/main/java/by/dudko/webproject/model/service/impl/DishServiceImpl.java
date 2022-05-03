@@ -5,11 +5,11 @@ import by.dudko.webproject.exception.ServiceException;
 import by.dudko.webproject.model.dao.DishDao;
 import by.dudko.webproject.model.dao.impl.DishDaoImpl;
 import by.dudko.webproject.model.entity.Dish;
-import by.dudko.webproject.model.entity.Language;
 import by.dudko.webproject.model.service.DishService;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 public class DishServiceImpl implements DishService {
     private static final DishServiceImpl INSTANCE = new DishServiceImpl();
@@ -20,20 +20,31 @@ public class DishServiceImpl implements DishService {
     }
 
     @Override
-    public List<Dish> findDishesByCategoryIdAndLanguage(int categoryId, Language language) throws ServiceException {
+    public List<Dish> findDishesByCategoryIdAndLanguageId(int categoryId, int languageId) throws ServiceException {
         try {
-            return dishDao.findDishesByCategoryIdAndLanguageId(categoryId, language.getId());
+            return dishDao.findDishesByCategoryIdAndLanguageId(categoryId, languageId);
         } catch (DaoException e) {
             throw new ServiceException("Failed to find dishes by category id and language id", e);
         }
     }
 
     @Override
-    public Optional<Dish> findDishByIdAndLanguage(int dishId, Language language) throws ServiceException {
+    public Optional<Dish> findDishByIdAndLanguageId(int dishId, int languageId) throws ServiceException {
         try {
-            return dishDao.findByIdAndLanguage(dishId, language);
+            return dishDao.findByIdAndLanguageId(dishId, languageId);
         } catch (DaoException e) {
-            throw new ServiceException("Failed to find dish by id and language", e);
+            throw new ServiceException("Failed to find dish by id and language id", e);
+        }
+    }
+
+    @Override
+    public List<Dish> findDishedByIdSetAndLanguageId(Set<Integer> idSet, int languageId) throws ServiceException {
+        try {
+            List<Dish> dishes = dishDao.findAllByLanguageId(languageId);
+            return dishes.stream().filter(d -> idSet.contains(d.getId()))
+                    .toList();
+        } catch (DaoException e) {
+            throw new ServiceException("Failed to find dishes by id set and language id");
         }
     }
 

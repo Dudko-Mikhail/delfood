@@ -8,7 +8,7 @@ import by.dudko.webproject.model.dao.UserDao;
 import by.dudko.webproject.model.dao.impl.UserDaoImpl;
 import by.dudko.webproject.model.entity.User;
 import by.dudko.webproject.model.service.UserService;
-import by.dudko.webproject.util.MessageKeys;
+import by.dudko.webproject.util.i18n.MessageKeys;
 import by.dudko.webproject.util.encryption.Encryptor;
 import by.dudko.webproject.util.encryption.impl.EncryptorImpl;
 import by.dudko.webproject.validator.UserValidator;
@@ -19,7 +19,6 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
     private static final UserServiceImpl INSTANCE = new UserServiceImpl();
     private final UserDao userDao = UserDaoImpl.getInstance();
-
     public static UserServiceImpl getInstance() {
         return INSTANCE;
     }
