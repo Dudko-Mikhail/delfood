@@ -19,16 +19,6 @@ public class DishDaoImpl implements DishDao {
                                             AND dt.language_id = ct.language_id
             WHERE dt.language_id = ?
             """;
-    private static final String FIND_ALL_DISHES_BY_LANGUAGE_NAME = """
-            SELECT dish_id, image_url, price, discount, weight, category, description, dish_name
-            FROM (SELECT d.dish_id, image_url, price, discount, weight, category_name category, description, dish_name, ct.language_id
-                  FROM dishes d
-                           JOIN dish_translation dt ON d.dish_id = dt.dish_id
-                           JOIN categories_translations ct ON d.category_id = ct.category_id
-                                                           AND dt.language_id = ct.language_id) t1
-            JOIN languages l ON L.language_id = t1.language_id
-            WHERE l.name = ?
-            """;
     private static final String FIND_DISHES_BY_CATEGORY_ID_AND_LANGUAGE_ID = """
             SELECT d.dish_id, image_url, price, discount, weight, category_name category, description, dish_name
             FROM dishes d
@@ -44,16 +34,6 @@ public class DishDaoImpl implements DishDao {
             JOIN categories_translations ct ON d.category_id = ct.category_id
                                             AND dt.language_id = ct.language_id
             WHERE d.dish_id = ? AND dt.language_id = ?
-            """;
-    private static final String FIND_DISH_BY_ID_AND_LANGUAGE_NAME = """
-            SELECT dish_id, image_url, price, discount, weight, category, description, dish_name
-            FROM (SELECT d.dish_id, image_url, price, discount, weight, category_name category, description, dish_name, ct.language_id
-                  FROM dishes d
-                           JOIN dish_translation dt ON d.dish_id = dt.dish_id
-                           JOIN categories_translations ct ON d.category_id = ct.category_id
-                                                           AND dt.language_id = ct.language_id) t1
-            JOIN languages l ON L.language_id = t1.language_id
-            WHERE t1.dish_id = ? AND l.name = ?
             """;
     private static final String ADD_NEW_DISH_TRANSLATION = """
             INSERT INTO dish_translation (dish_id, language_id, dish_name, description)
@@ -73,17 +53,6 @@ public class DishDaoImpl implements DishDao {
 
     public static DishDaoImpl getInstance() {
         return INSTANCE;
-    }
-
-    @Override
-    public List<Dish> findAllByLanguageName(String languageName) throws DaoException {
-        try (var connection = pool.takeConnection();
-             var preparedStatement = connection.prepareStatement(FIND_ALL_DISHES_BY_LANGUAGE_NAME)) {
-            preparedStatement.setString(1, languageName);
-            return dishMapper.mapRows(preparedStatement.executeQuery());
-        } catch (SQLException e) {
-            throw new DaoException("Failed to find all dishes by language name", e);
-        }
     }
 
     @Override
@@ -118,18 +87,6 @@ public class DishDaoImpl implements DishDao {
             return dishMapper.mapRow(preparedStatement.executeQuery());
         } catch (SQLException e) {
             throw new DaoException("Failed to find dish id and language id", e);
-        }
-    }
-
-    @Override
-    public Optional<Dish> findByIdAndLanguageName(Integer dishId, String languageName) throws DaoException {
-        try (var connection = pool.takeConnection();
-             var preparedStatement = connection.prepareStatement(FIND_DISH_BY_ID_AND_LANGUAGE_NAME)) {
-            preparedStatement.setInt(1, dishId);
-            preparedStatement.setString(2, languageName);
-            return dishMapper.mapRow(preparedStatement.executeQuery());
-        } catch (SQLException e) {
-            throw new DaoException("Failed to find dish id and language name", e);
         }
     }
 

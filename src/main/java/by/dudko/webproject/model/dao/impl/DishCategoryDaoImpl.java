@@ -17,20 +17,6 @@ public class DishCategoryDaoImpl implements DishCategoryDao {
                  JOIN categories_translations AS ct on ct.category_id = dc.category_id
             WHERE dc.category_id = ? AND ct.language_id = ?
             """;
-    private static final String FIND_CATEGORY_BY_ID_AND_LANGUAGE = """
-            SELECT dc.category_id, image_url, category_name name
-            FROM dish_categories dc
-                 JOIN categories_translations AS ct on ct.category_id = dc.category_id
-                 JOIN languages l on l.language_id = ct.language_id
-            WHERE dc.category_id = ? AND l.name = ?
-            """;
-    private static final String FIND_ALL_CATEGORIES_BY_LANGUAGE = """
-            SELECT dc.category_id, image_url, category_name name
-            FROM dish_categories dc
-                 JOIN categories_translations AS ct on ct.category_id = dc.category_id
-                 JOIN languages l on l.language_id = ct.language_id
-            WHERE l.name = ?
-            """;
     private static final String FIND_ALL_CATEGORIES_BY_LANGUAGE_ID = """
             SELECT dc.category_id, image_url, category_name name
             FROM dish_categories dc
@@ -58,17 +44,6 @@ public class DishCategoryDaoImpl implements DishCategoryDao {
     }
 
     @Override
-    public List<DishCategory> findAllByLanguageName(String languageName) throws DaoException {
-        try (var connection = pool.takeConnection();
-             var preparedStatement = connection.prepareStatement(FIND_ALL_CATEGORIES_BY_LANGUAGE)) {
-            preparedStatement.setString(1, languageName);
-            return categoryMapper.mapRows(preparedStatement.executeQuery());
-        } catch (SQLException e) {
-            throw new DaoException("Failed to find all dish categories by language name", e);
-        }
-    }
-
-    @Override
     public List<DishCategory> findAllByLanguageId(int languageId) throws DaoException {
         try (var connection = pool.takeConnection();
              var preparedStatement = connection.prepareStatement(FIND_ALL_CATEGORIES_BY_LANGUAGE_ID)) {
@@ -77,19 +52,6 @@ public class DishCategoryDaoImpl implements DishCategoryDao {
         } catch (SQLException e) {
             throw new DaoException("Failed to find all dish categories by language id", e);
         }
-    }
-
-    @Override
-    public Optional<DishCategory> findByIdAndLanguageName(Integer categoryId, String language) throws DaoException {
-        try (var connection = pool.takeConnection();
-             var preparedStatement = connection.prepareStatement(FIND_CATEGORY_BY_ID_AND_LANGUAGE)) {
-            preparedStatement.setInt(1, categoryId);
-            preparedStatement.setString(2, language);
-            return categoryMapper.mapRow(preparedStatement.executeQuery());
-        } catch (SQLException e) {
-            throw new DaoException("Failed to find dish category by id and language", e);
-        }
-
     }
 
     @Override
