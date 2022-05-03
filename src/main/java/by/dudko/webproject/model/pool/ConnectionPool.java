@@ -112,8 +112,8 @@ public class ConnectionPool {
     }
 
     /**
-     * Takes connection from the pool
-     * @return a taken connection
+     * Takes connection from the pool.
+     * @return a taken connection.
      */
     public Connection takeConnection() {
         ProxyConnection connection = null;
@@ -128,9 +128,9 @@ public class ConnectionPool {
     }
 
     /**
-     * Returns the connection to the pool
-     * @param connection one of the pool connections
-     * @throws PoolException if illegal connection has been detected
+     * Returns the connection to the pool.
+     * @param connection one of the pool connections.
+     * @throws PoolException if illegal connection has been detected.
      */
     void releaseConnection(ProxyConnection connection) throws PoolException {
         if (!givenAwayConnections.remove(connection)) {
@@ -140,7 +140,7 @@ public class ConnectionPool {
     }
 
     /**
-     * Deregister all drivers and closes connections from the pool
+     * Deregister all drivers and closes connections from the pool.
      */
     public void destroyPool() {
         for (int i = 0; i < POOL_SIZE; i++) {
