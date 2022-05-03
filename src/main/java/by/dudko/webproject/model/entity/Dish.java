@@ -2,7 +2,7 @@ package by.dudko.webproject.model.entity;
 
 import java.math.BigDecimal;
 
-public class Dish extends RootEntity<Integer> {
+public class Dish extends RootEntity<Integer> implements Valuable {
     private String name;
     private String category;
     private String description;
@@ -10,12 +10,11 @@ public class Dish extends RootEntity<Integer> {
     private String imageUrl;
     private BigDecimal price;
     private BigDecimal discount;
+    private transient BigDecimal discountedPrice;
 
     public static DishBuilder getBuilder() {
         return new DishBuilder();
     }
-
-    public Dish() {}
 
     public BigDecimal getPrice() {
         return price;
@@ -31,11 +30,6 @@ public class Dish extends RootEntity<Integer> {
 
     public void setDiscount(BigDecimal discount) {
         this.discount = discount;
-    }
-
-    public BigDecimal calculateDiscountedPrice() {
-        BigDecimal discountAmount = price.multiply(discount);
-        return price.subtract(discountAmount);
     }
 
     public int getWeight() {

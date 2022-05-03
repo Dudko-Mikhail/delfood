@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public interface ParametrizedCommand extends Command {
+public interface ParametrizedCommand extends Command { // TODO remove
 
     Set<CommandArgument> getCommandParameters();
 
