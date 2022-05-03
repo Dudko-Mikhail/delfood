@@ -1,7 +1,7 @@
 package by.dudko.webproject.model.dao.impl;
 
 import by.dudko.webproject.exception.DaoException;
-import by.dudko.webproject.model.dao.BaseDao;
+import by.dudko.webproject.model.dao.LanguageDao;
 import by.dudko.webproject.model.entity.Language;
 import by.dudko.webproject.model.mapper.impl.LanguageRowMapper;
 import by.dudko.webproject.model.pool.ConnectionPool;
@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class LanguageDao implements BaseDao<Integer, Language> {
+public class LanguageDaoImpl implements LanguageDao {
     private static final String FIND_ALL_LANGUAGES = """
             SELECT language_id, name
             FROM languages
@@ -29,11 +29,11 @@ public class LanguageDao implements BaseDao<Integer, Language> {
             INSERT INTO languages (name)
             VALUES (?)
             """;
-    private static final LanguageDao INSTANCE = new LanguageDao();
+    private static final LanguageDaoImpl INSTANCE = new LanguageDaoImpl();
     private final LanguageRowMapper languageMapper = LanguageRowMapper.getInstance();
     private final ConnectionPool pool = ConnectionPool.getInstance();
 
-    public static LanguageDao getInstance() {
+    public static LanguageDaoImpl getInstance() {
         return INSTANCE;
     }
 
@@ -86,5 +86,5 @@ public class LanguageDao implements BaseDao<Integer, Language> {
         }
     }
 
-    private LanguageDao() {}
+    private LanguageDaoImpl() {}
 }
