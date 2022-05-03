@@ -34,13 +34,12 @@
 <body>
 <jsp:include page="common/header.jsp"/>
 <div class="container">
+    <h1 class="fs-3 mb-2">${common_info}</h1>
+    <div class="cart__items__wrapper shadow-sm p-3"> <%-- FIXME изменить класс --%>
         <form id="update_profile_form" method="post" action="${absolutePath}/controller" autocomplete="off" novalidate>
             <input type="hidden" name="command" value="update_profile">
 
-            <div class="fs-3 mb-2">${common_info}</div>
-            <hr/>
-            <div class="row border mx-1 p-3 row-cols-1 row-cols-md-2">
-
+            <div class="row row-cols-1 row-cols-md-2">
                 <div class="mb-2 col">
                     <div class="form-label">${login_label}*</div>
                     <div class="form-control">${user.login}</div>
@@ -68,44 +67,42 @@
                     <input class="form-control" type="text" id="edit_phone_number" name="phone_number"
                            value="${user.phoneNumber}">
                 </div>
-
             </div>
-
-            <div class="fs-3 mb-2">Смена пароля</div>
-            <hr/>
-
-            <div class="row py-2 row-cols-1 row-cols-md-2">
-
-                <a class="btn btn-primary" data-bs-toggle="collapse" href="#change_password_collapse" role="button"
-                   aria-expanded="false" aria-controls="collapseExample">${change_password}</a>
-
-                <div class="collapse mb-2" id="change_password_collapse">
-                    <div class="card card-body">
-                        <div class="mb-2">
-                            <label for="old_password" class="form-label">${old_password}</label>
-                            <input class="form-control" type="password" id="old_password" name="old_password"/>
-                        </div>
-
-                        <div class="mb-2">
-                            <label for="new_password" class="form-label">${new_password}</label>
-                            <input class="form-control" type="password" id="new_password" name="new_password"/>
-                        </div>
-
-                        <div class="mb-2">
-                            <label for="confirm_new_password" class="form-label">${confirm_new_password}</label>
-                            <input class="form-control" type="password" id="confirm_new_password"
-                                   name="confirm_new_password"/>
-                        </div>
-                    </div>
-                </div>
+            <div class="mt-2">
+                <button type="button" class="btn btn-primary">${save}</button>
+                <button type="button" class="btn btn-warning">${cancel}</button>
             </div>
-
-
-
-            <button type="button" class="btn btn-primary">${save}</button>
-            <button type="button" class="btn btn-warning">${cancel}</button>
         </form>
     </div>
+        <%--            <div class="fs-3 mb-2">Смена пароля</div>--%>
+        <%--            <hr/>--%>
+
+        <%--            <div class="row py-2 row-cols-1 row-cols-md-2">--%>
+
+        <%--                <a class="btn btn-primary" data-bs-toggle="collapse" href="#change_password_collapse" role="button"--%>
+        <%--                   aria-expanded="false" aria-controls="collapseExample">${change_password}</a>--%>
+
+        <%--                <div class="collapse mb-2" id="change_password_collapse">--%>
+        <%--                    <div class="card card-body">--%>
+        <%--                        <div class="mb-2">--%>
+        <%--                            <label for="old_password" class="form-label">${old_password}</label>--%>
+        <%--                            <input class="form-control" type="password" id="old_password" name="old_password"/>--%>
+        <%--                        </div>--%>
+
+        <%--                        <div class="mb-2">--%>
+        <%--                            <label for="new_password" class="form-label">${new_password}</label>--%>
+        <%--                            <input class="form-control" type="password" id="new_password" name="new_password"/>--%>
+        <%--                        </div>--%>
+
+        <%--                        <div class="mb-2">--%>
+        <%--                            <label for="confirm_new_password" class="form-label">${confirm_new_password}</label>--%>
+        <%--                            <input class="form-control" type="password" id="confirm_new_password"--%>
+        <%--                                   name="confirm_new_password"/>--%>
+        <%--                        </div>--%>
+        <%--                    </div>--%>
+        <%--                </div>--%>
+        <%--            </div>--%>
+</div>
 <jsp:include page="common/footer.jsp"/>
 </body>
 </html>

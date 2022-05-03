@@ -2,6 +2,7 @@
 <%@ include file="imports.jspf" %>
 
 <fmt:message scope="page" var="title" key="page.title.dish_categories"/>
+<fmt:message var="alt.category" key="alt.category"/>
 
 <!DOCTYPE html>
 <html lang="ru">
@@ -22,7 +23,7 @@
             <a href="${absolutePath}/controller?command=go_to_category_page&category_id=${category.id}" class="text-decoration-none">
                 <div class="text-center text-black fs-4">${category.name}</div>
                 <div class="scalable__image">
-                    <img src="${category.imageUrl}" alt="Category image"/>
+                    <img src="${category.imageUrl}" alt="${category_alt}"/>
                 </div>
             </a>
         </div>

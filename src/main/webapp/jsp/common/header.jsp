@@ -8,6 +8,11 @@
 <fmt:message var="sign_out" key="nav.user.dropdown.sign_out"/>
 <fmt:message var="profile" key="nav.user.dropdown.profile"/>
 <fmt:message var="reservation" key="nav.reservation"/>
+<fmt:message var="cart" key="nav.cart"/>
+<fmt:message var="localization_alt" key="alt.localization"/>
+
+<c:set var="totalProductQuantity" value="${sessionScope.order_manager.totalProductQuantity}"/>
+<c:set var="totalProductQuantity" value="${totalProductQuantity ne 0 ? totalProductQuantity : ''}"/>
 
 <header class="header">
     <div class="container px-4">
@@ -24,9 +29,13 @@
                         <a href="${absolutePath}/controller?command=go_to_categories_page"
                            class="menu__link">${categories}</a>
                     </li>
-                    <li><a href="" class="menu__link">Акции</a></li>
                     <li><a href="" class="menu__link">${reservation}</a></li>
-                    <li><a href="" class="menu__link">Корзина</a></li>
+                    <li>
+                        <a href="${absolutePath}/controller?command=go_to_cart_page" class="menu__link">
+                            <span>${cart}</span>
+                            <span id="cart_size" class="ms-1">${totalProductQuantity}</span>
+                        </a>
+                    </li>
                 </ul>
             </nav>
             <ul class="menu__list">
@@ -68,9 +77,9 @@
                 <li>
                     <a href="#" class="header__icon d-block link-dark text-decoration-none" id="localization"
                        data-bs-toggle="dropdown" aria-expanded="false">
-                        <img src="${absolutePath}/img/planet.png" alt="localization">
+                        <img src="${absolutePath}/img/planet.png" alt="${localization_alt}">
                     </a>
-                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="localization">
+                    <ul class="language__list dropdown-menu dropdown-menu-end" aria-labelledby="localization">
                         <c:forEach var="locale" items="${sessionScope.languages}">
                             <li><a class="dropdown-item"
                                    href="${absolutePath}/controller?command=change_locale&language=${locale}">${locale}</a>

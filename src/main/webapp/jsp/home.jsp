@@ -31,10 +31,29 @@
         <div id="answer"></div>
     </div>
 
-    <div>
-        <h2>Order items:</h2>
-        <c:out value="${order_items}"/>
+    <div class="container w-50">
+        <div class="form-floating mb-3">
+            <input type="number" class="form-control" id="duration" placeholder="4">
+            <label for="duration">Продолжительность</label>
+        </div>
+
+        <div class="form-floating config mb-3">
+            <input type="number" class="form-control" id="tick" placeholder="1">
+            <label for="tick">Тиков в секунду</label>
+            <button class="mt-1 btn btn-primary" data-action="start">
+                Старт
+            </button>
+        </div>
     </div>
+
+    <div class="timer">
+        <div class="big__circle">
+            <div class="small__circle">
+                <span></span>
+            </div>
+        </div>
+    </div>
+
 </div>
 <jsp:include page="common/footer.jsp"/>
 <script>
@@ -67,7 +86,10 @@
                 }
             });
         }
-    })
+
+
+    });
 </script>
+<script src="../js/timer.js"></script>
 </body>
 </html>
