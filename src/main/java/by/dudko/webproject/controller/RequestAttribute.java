@@ -17,6 +17,7 @@ public final class RequestAttribute {
     public static final String INVALID_PASSWORD = "invalid_password";
     public static final String INVALID_PASSWORD_REPEAT = "invalid_password_repeat";
     public static final String INVALID_PHONE_NUMBER = "invalid_phone_number";
+    public static final String ERROR_MESSAGE = "error_message";
 
 
     // TODO ???

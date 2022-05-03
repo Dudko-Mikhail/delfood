@@ -4,7 +4,6 @@ public final class RequestParameter {
     public static final String COMMAND = "command";
     public static final String LANGUAGE = "language";
 
-    public static final String USER_ID = "id";
     public static final String VERIFICATION_CODE = "verification_code";
     public static final String LOGIN = "login";
     public static final String PASSWORD = "password";
@@ -17,8 +16,8 @@ public final class RequestParameter {
     public static final String REMEMBER_ME = "remember_me";
 
     public static final String CATEGORY_ID = "category_id";
-    public static final String DISH_ID = "dish_id";
-    public static final String AMOUNT = "amount";
+    public static final String ITEM_ID = "item_id";
+    public static final String VALUE = "value";
 
     private RequestParameter() {}
 }

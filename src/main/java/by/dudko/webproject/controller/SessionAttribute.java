@@ -6,7 +6,7 @@ public final class SessionAttribute {
     public static final String ROLE = "role";
     public static final String PAGE = "page";
     public static final String LANGUAGES = "languages"; //fixme можно ???
-    public static final String ORDER_ITEMS = "order_items";
+    public static final String ORDER_MANAGER = "order_manager"; // FIXME rename after order ManagerClass renaming
 
     private SessionAttribute() {}
 }
