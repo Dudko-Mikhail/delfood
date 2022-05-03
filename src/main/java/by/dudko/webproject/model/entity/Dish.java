@@ -2,7 +2,7 @@ package by.dudko.webproject.model.entity;
 
 import java.math.BigDecimal;
 
-public class Dish extends RootEntity<Integer> implements Valuable {
+public class Dish extends ValuableEntity {
     private String name;
     private String category;
     private String description;
@@ -10,8 +10,7 @@ public class Dish extends RootEntity<Integer> implements Valuable {
     private String imageUrl;
     private BigDecimal price;
     private BigDecimal discount;
-    private transient BigDecimal discountedPrice;
-
+    
     public static DishBuilder getBuilder() {
         return new DishBuilder();
     }

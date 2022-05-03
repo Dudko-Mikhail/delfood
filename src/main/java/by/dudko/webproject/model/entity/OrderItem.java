@@ -1,41 +1,67 @@
 package by.dudko.webproject.model.entity;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 
-public class OrderItem implements Serializable {
-    private Dish dish;
-    private int amount;
+public class OrderItem extends ValuableEntity {
+    private final ValuableEntity valuable;
+    private final BigDecimal discountedPrice;
+    private int quantity;
 
-    public OrderItem(Dish dish, int amount) {
-        this.dish = dish;
-        this.amount = amount;
+    public OrderItem(ValuableEntity valuable, int quantity) {
+        this.valuable = valuable;
+        discountedPrice = valuable.getDiscountedPrice();
+        if (quantity > 0) {
+            this.quantity = quantity;
+        }
     }
 
-    public Dish getDish() {
-        return dish;
+    @Override
+    public BigDecimal getPrice() {
+        return valuable.getPrice().multiply(new BigDecimal(quantity));
     }
 
-    public void setDish(Dish dish) {
-        this.dish = dish;
+    @Override
+    public BigDecimal getDiscount() {
+        return valuable.getDiscount();
     }
 
-    public int getAmount() {
-        return amount;
+    @Override
+    public BigDecimal calculateDiscountAmount() {
+        return valuable.calculateDiscountAmount().multiply(new BigDecimal(quantity));
     }
 
-    public void setAmount(int amount) {
-        this.amount = amount;
+    @Override
+    public BigDecimal getDiscountedPrice() {
+        return discountedPrice.multiply(new BigDecimal(quantity));
     }
 
-    public void increaseAmount(int value) {
-        amount += value;
+    public Valuable getValuable() {
+        return valuable;
     }
 
-    public BigDecimal calculateItemPrice() { // TODO check method
-        BigDecimal realDishPrice = dish.calculateDiscountedPrice();
-        BigDecimal productAmount = new BigDecimal(amount);
-        return realDishPrice.multiply(productAmount);
+    public int getQuantity() {
+        return quantity;
+    }
+
+    /**
+     * This method increase quantity of the valuable item by the given value.
+     * Quantity value cannot be less than zero.
+     * @param value the addend.
+     */
+    public void increaseQuantity(int value) {
+        quantity += value;
+        if (quantity < 0) {
+            quantity = 0;
+        }
+    }
+
+    public boolean isEmpty() {
+        return quantity == 0;
+    }
+
+    @Override
+    public Integer getId() {
+        return valuable.getId();
     }
 
     @Override
@@ -43,24 +69,24 @@ public class OrderItem implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        OrderItem orderItem = (OrderItem) o;
+        OrderItem item = (OrderItem) o;
 
-        if (amount != orderItem.amount) return false;
-        return dish != null ? dish.equals(orderItem.dish) : orderItem.dish == null;
+        if (quantity != item.quantity) return false;
+        return valuable != null ? valuable.equals(item.valuable) : item.valuable == null;
     }
 
     @Override
     public int hashCode() {
-        int result = dish != null ? dish.hashCode() : 0;
-        result = 31 * result + amount;
+        int result = valuable != null ? valuable.hashCode() : 0;
+        result = 31 * result + quantity;
         return result;
     }
 
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("OrderItem{");
-        sb.append("dish=").append(dish);
-        sb.append(", amount=").append(amount);
+        sb.append("valuable=").append(valuable);
+        sb.append(", quantity=").append(quantity);
         sb.append('}');
         return sb.toString();
     }
