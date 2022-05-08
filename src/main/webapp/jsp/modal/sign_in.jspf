@@ -4,7 +4,7 @@
 <fmt:message var="login_email_label" key="label.login_email"/>
 <fmt:message var="password_label" key="label.password"/>
 <fmt:message var="sign_in" key="action.sign_in"/>
-<fmt:message var="remember_me" key="action.remember_me"/>
+<fmt:message var="keep_me_signed_in" key="action.keep_me_signed_in"/>
 <fmt:message var="no_account" key="label.no_account_register"/>
 <fmt:message var="forgot_password" key="label.forgot_password"/>
 <fmt:message var="header_sign_in" key="header.sign_in"/>
@@ -48,10 +48,10 @@
                         </div>
                     </div>
                     <div class="form-check mb-2">
-                        <input class="form-check-input" type="checkbox" name="remember_me" value="true" id="remember_me"
+                        <input class="form-check-input" type="checkbox" name="keep_me_signed_in" value="true" id="keep_me_signed_in"
                                checked/>
-                        <label class="form-check-label" for="remember_me">
-                            ${remember_me}
+                        <label class="form-check-label" for="keep_me_signed_in">
+                            ${keep_me_signed_in}
                         </label>
                     </div>
                     <div class="row">
@@ -73,6 +73,5 @@
     </div>
 </div>
 
-<!-- Modal forgot password -->
+<%-- Modal forgot password --%>
 <%@include file="forgot_password.jspf" %>
-<!-- -->

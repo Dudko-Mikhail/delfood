@@ -32,10 +32,9 @@
                 </div>
             </div>
             <div class="modal-footer justify-content-start">
-                <a href="${absolutePath}/controller?command=send_email_verification_message&email=${requestScope.email_to_verify}"
-                   class="text-decoration-none ps-0">${send_message_again}</a>
+                <input type="hidden" name="email_to_verify" value="${requestScope.email_to_verify}"/>
+                <button type="button" id="send_verification_message" class="w-100 btn btn-warning">${send_message_again} </button>
             </div>
-            <!-- TODO Сделать post запросом + добавить блокироку кнопки на 10 секунд -->
         </div>
     </div>
 </div>
