@@ -6,6 +6,6 @@
     <title>index</title>
 </head>
 <body>
-    <c:redirect url="controller?command=go_to_home_page"/>
+    <c:redirect url="controller?command=initial_command"/>
 </body>
 </html>
