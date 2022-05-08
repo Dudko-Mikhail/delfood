@@ -1,6 +1,5 @@
 package by.dudko.webproject.controller.command.impl;
 
-import by.dudko.webproject.controller.PagePath;
 import by.dudko.webproject.controller.RequestAttribute;
 import by.dudko.webproject.controller.RequestParameter;
 import by.dudko.webproject.controller.SessionAttribute;
@@ -11,6 +10,7 @@ import by.dudko.webproject.exception.ServiceException;
 import by.dudko.webproject.model.entity.User;
 import by.dudko.webproject.model.service.UserService;
 import by.dudko.webproject.model.service.impl.UserServiceImpl;
+import by.dudko.webproject.util.PathHelper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
@@ -21,16 +21,13 @@ public class SignInCommand implements Command {
     private static final UserService userService = UserServiceImpl.getInstance();
 
     @Override
-    public Router execute(HttpServletRequest request) throws CommandException {
+    public Router execute(HttpServletRequest request) throws CommandException { // TODO refactor command
         String loginEmail = request.getParameter(RequestParameter.LOGIN_EMAIL);
         String password = request.getParameter(RequestParameter.PASSWORD);
         Router router;
         try {
             Optional<User> optionalUser = userService.signIn(loginEmail, password);
             String currentPage = (String) request.getSession().getAttribute(SessionAttribute.PAGE);
-            if (currentPage == null) {
-                currentPage = PagePath.HOME_PAGE;
-            }
             if (optionalUser.isPresent()) {
                 User user = optionalUser.get();
                 switch (user.getStatus()) {
@@ -41,12 +38,10 @@ public class SignInCommand implements Command {
                     case ACTIVE -> {
                         HttpSession session = request.getSession();
                         session.setAttribute(SessionAttribute.USER_LOGIN, user.getLogin());
-                        session.setAttribute(SessionAttribute.ROLE, user.getRole());
-                        router = switch (user.getRole()) {
-                            case ADMIN -> new Router(Router.RouteType.REDIRECT, PagePath.ADMIN_PAGE);
-                            case CLIENT -> new Router(Router.RouteType.REDIRECT, currentPage); // TODO client page
-                            default -> new Router(Router.RouteType.REDIRECT, currentPage);
-                        };
+                        User.Role role = user.getRole();
+                        session.setAttribute(SessionAttribute.ROLE, role);
+                        String page = PathHelper.getInitialPageAccordingUserRole(role);
+                        router = new Router(Router.RouteType.REDIRECT, page);
                     }
                     case BLOCKED -> {
                         request.setAttribute(RequestAttribute.SHOW_BLOCKED_ACCOUNT_MODAL, true);
