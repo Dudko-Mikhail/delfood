@@ -103,6 +103,9 @@ $(document).ready(function () {
         cartSizeElement.textContent = cartSize === 0 ? '' : cartSize;
         totalPriceElement.textContent = totalPrice;
         totalDiscountElement.textContent = totalDiscount;
+        if (cartSize === 0) {
+            emptyCartActions();
+        }
     }
 
     function updateCartItem(item, value, totalPrice) {
@@ -130,9 +133,14 @@ $(document).ready(function () {
         item.remove();
     }
 
+    function emptyCartActions() {
+        const statisticsElement = document.querySelector('.order_statistics');
+        const emptyCartElement = document.querySelector('._empty');
+        emptyCartElement.classList.remove('d-none');
+        statisticsElement.classList.add('d-none');
+    }
+
     function processError() {
-        alert("Sorry, but our server is unavailable now");
+        alert('Sorry, but our server is unavailable now');
     }
 });
-
-// TODO Корзина осталась пустой. Нужно добавить надпись о том, что в корзине нет элементов.

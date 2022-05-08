@@ -9,6 +9,7 @@
 
 <c:set var="base_image" value="${absolutePath}/img/default_dish.png" scope="page"/>
 <c:set var="order" value="${sessionScope.order_manager}" scope="page"/>
+<c:set var="isEmptyCart" value="${empty requestScope.dishes}" scope="page"/>
 
 <!DOCTYPE html>
 <html lang="ru">
@@ -24,9 +25,8 @@
 <jsp:include page="common/header.jsp"/>
 <div class="container">
     <h1 class="text-center">${cart}</h1>
-    <div class="cart__items__wrapper shadow-sm px-4 py-3">
-        <c:choose>
-            <c:when test="${order.totalProductQuantity ne 0}">
+    <div class="content__wrapper shadow-sm px-4 py-3">
+            <c:if test="${!isEmptyCart}">
                 <c:forEach var="dish" items="${requestScope.dishes}">
                     <c:set var="orderItem" value="${order.getOrderItemById(dish.id).get()}"/>
                     <div data-item="${dish.id}" class="row cart__item py-2">
@@ -53,7 +53,7 @@
                 </c:forEach>
                 <%-- TODO блюдо название крестик - 1 строка, цена + counter - 2 строка --%>
                 <%-- TODO Сделать order-fix: при width <  --%>
-                <div>
+                <div class="order_statistics">
                     <div>
                         <span>Общая цена заказа: </span>
                         <span id="total_price"><fmt:formatNumber minFractionDigits="2" maxFractionDigits="2" value="${order.price}"/></span>
@@ -67,13 +67,10 @@
                     <div>
                         Верное значение: <fmt:formatNumber maxFractionDigits="2" value="${order.orderPrice}"/>
                     </div>
+                    <a class="btn btn-warning" href="#">${make_order}</a>
                 </div>
-                <a class="btn btn-warning" href="#">${make_order}</a>
-            </c:when>
-            <c:otherwise>
-                <div class="fs-4">${empty_cart}</div>
-            </c:otherwise>
-        </c:choose>
+            </c:if>
+        <div class="_empty fs-4 ${isEmptyCart ? '' : 'd-none'}">${empty_cart}</div>
     </div>
 </div>
 <jsp:include page="common/footer.jsp"/>
