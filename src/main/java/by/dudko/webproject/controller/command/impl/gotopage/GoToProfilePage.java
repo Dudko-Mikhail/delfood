@@ -3,8 +3,8 @@ package by.dudko.webproject.controller.command.impl.gotopage;
 import by.dudko.webproject.controller.PagePath;
 import by.dudko.webproject.controller.Router;
 import by.dudko.webproject.controller.SessionAttribute;
-import by.dudko.webproject.controller.command.Command;
 import by.dudko.webproject.controller.RequestAttribute;
+import by.dudko.webproject.controller.command.RoutingCommand;
 import by.dudko.webproject.exception.CommandException;
 import by.dudko.webproject.exception.ServiceException;
 import by.dudko.webproject.model.entity.User;
@@ -16,7 +16,7 @@ import jakarta.servlet.http.HttpSession;
 
 import java.util.Optional;
 
-public class GoToProfilePage implements Command { // TODO implement
+public class GoToProfilePage implements RoutingCommand {
     private static final UserService userService = UserServiceImpl.getInstance();
 
     @Override

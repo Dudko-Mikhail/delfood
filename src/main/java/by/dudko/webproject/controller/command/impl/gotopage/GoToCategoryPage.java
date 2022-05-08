@@ -4,8 +4,8 @@ import by.dudko.webproject.controller.PagePath;
 import by.dudko.webproject.controller.RequestParameter;
 import by.dudko.webproject.controller.Router;
 import by.dudko.webproject.controller.SessionAttribute;
-import by.dudko.webproject.controller.command.Command;
 import by.dudko.webproject.controller.RequestAttribute;
+import by.dudko.webproject.controller.command.RoutingCommand;
 import by.dudko.webproject.exception.CommandException;
 import by.dudko.webproject.exception.ServiceException;
 import by.dudko.webproject.model.entity.Dish;
@@ -23,36 +23,38 @@ import org.apache.logging.log4j.Logger;
 import java.util.List;
 import java.util.Optional;
 
-public class GoToCategoryPage implements Command { // TODO add pagination
+public class GoToCategoryPage implements RoutingCommand {
     private static final Logger logger = LogManager.getLogger();
+    private static final String CATEGORY_NOT_FOUND = "Category not found";
     private static final DishService dishService = DishServiceImpl.getInstance();
     private static final DishCategoryService categoryService = DishCategoryServiceImpl.getInstance();
 
     @Override
-    public Router execute(HttpServletRequest request) throws CommandException {
+    public Router execute(HttpServletRequest request) throws CommandException { // TODO refactor and change messages
         HttpSession session = request.getSession();
-        Router router;
         try {
             int categoryId = Integer.parseInt(request.getParameter(RequestParameter.CATEGORY_ID));
-            Language sessionLanguage = (Language) session.getAttribute(SessionAttribute.LANGUAGE);
-            Optional<String> categoryName = categoryService.findCategoryNameByIdAndLanguage(categoryId, sessionLanguage);
+            Language language = (Language) session.getAttribute(SessionAttribute.LANGUAGE);
+            Optional<String> categoryName = categoryService.findCategoryNameByIdAndLanguageId(categoryId,
+                    language.getId());
             if (categoryName.isEmpty()) {
                 String message = String.format("Failed to find translation for category with id %d into %s language",
-                        categoryId, sessionLanguage.getName());
-                logger.error(message);
+                        categoryId, language.getName());
+                logger.warn(message);
+                request.setAttribute(RequestAttribute.ERROR_MESSAGE, CATEGORY_NOT_FOUND);
                 return new Router(HttpServletResponse.SC_NOT_FOUND);
+            } else {
+                request.setAttribute(RequestAttribute.CATEGORY_NAME, categoryName.get());
+                List<Dish> dishes = dishService.findDishesByCategoryIdAndLanguageId(categoryId, language.getId());
+                request.setAttribute(RequestAttribute.DISHES, dishes);
             }
-            request.setAttribute(RequestAttribute.CATEGORY_NAME, categoryName.get());
-
-            List<Dish> dishes = dishService.findDishesByCategoryIdAndLanguage(categoryId, sessionLanguage);
-            request.setAttribute(RequestAttribute.DISHES, dishes);
-            router = new Router(Router.RouteType.FORWARD, PagePath.CATEGORY_PAGE);
-        } catch (NumberFormatException e) { // TODO Что провильнее делать
-            logger.warn("Attempt to execute GoToCategoryPage command with invalid category id");
-            router = new Router(HttpServletResponse.SC_NOT_FOUND);
+        } catch (NumberFormatException e) {
+            logger.warn("Attempt to execute GoToCategoryPage command with invalid (not numeric) category id");
+            request.setAttribute(RequestAttribute.ERROR_MESSAGE, CATEGORY_NOT_FOUND);
+            return new Router(HttpServletResponse.SC_NOT_FOUND);
         } catch (ServiceException e) {
             throw new CommandException("Failed to execute GoToCategoryPage command", e);
         }
-        return router;
+        return new Router(Router.RouteType.FORWARD, PagePath.CATEGORY_PAGE);
     }
 }
