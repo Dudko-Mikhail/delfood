@@ -81,9 +81,8 @@
                     </a>
                     <ul class="language__list dropdown-menu dropdown-menu-end" aria-labelledby="localization">
                         <c:forEach var="locale" items="${sessionScope.languages}">
-                            <li><a class="dropdown-item"
-                                   href="${absolutePath}/controller?command=change_locale&language=${locale}">${locale}</a>
-                            </li>
+                            <c:set var="link" value="${absolutePath}/controller?command=change_locale&language=${locale}"/>
+                            <li><a class="dropdown-item" href="${locale ne sessionScope.language.name ? link : '#'}">${locale}</a></li>
                         </c:forEach>
                     </ul>
                 </li>
@@ -98,9 +97,9 @@
 </header>
 
 <c:if test="${sessionScope.user_login eq null}">
-    <!-- Modal Sign In -->
+    <%-- Modal Sign In --%>
     <%@include file="../modal/sign_in.jspf" %>
-    <!-- Modal Sign Up -->
+    <%-- Modal Sign Up --%>
     <%@include file="../modal/sign_up.jspf" %>
 </c:if>
 
