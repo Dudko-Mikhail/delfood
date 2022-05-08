@@ -1,9 +1,10 @@
 package by.dudko.webproject.controller;
 
 import by.dudko.webproject.controller.command.Command;
+import by.dudko.webproject.controller.command.CommandProvider;
 import by.dudko.webproject.controller.command.CommandType;
 import by.dudko.webproject.exception.CommandException;
-import by.dudko.webproject.util.PathUtils;
+import by.dudko.webproject.util.PathHelper;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -30,19 +31,19 @@ public class Controller extends HttpServlet {
     }
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        String commandText = request.getParameter(RequestParameter.COMMAND);
-        Optional<Command> command = CommandType.parseCommand(commandText);
-        if (command.isEmpty()) {
+        String commandName = request.getParameter(RequestParameter.COMMAND);
+        Optional<CommandType> commandTypeOptional = CommandProvider.parseCommand(commandName);
+        if (commandTypeOptional.isEmpty()) {
             response.sendError(HttpServletResponse.SC_NOT_FOUND);
             return;
         }
         try {
-            Router router = command.get().execute(request);
+            CommandType command = commandTypeOptional.get();
+            Router router = command.execute(request);
             String pagePath = router.getPagePath();
-
             switch (router.getRouteType()) {
                 case REDIRECT -> {
-                    pagePath = PathUtils.addContextPath(request, router.getPagePath());
+                    pagePath = PathHelper.addContextPath(request, router.getPagePath());
                     response.sendRedirect(pagePath);
                 }
                 case FORWARD -> request.getRequestDispatcher(pagePath).forward(request, response);
