@@ -275,7 +275,7 @@ input:focus ~ .help {
     margin-left: 2px;
 }
 
-.cart__items__wrapper {
+.content__wrapper {
     border: 1px solid lightgrey;
     border-radius: 10px;
 }
@@ -411,6 +411,6 @@ input:focus ~ .help {
     height: 70%;
     left: 15%;
     top: 15%;
-    z-index: 10;
+    z-index: 2;
     background-color: white;
 }
