@@ -10,7 +10,7 @@ import jakarta.servlet.annotation.WebFilter;
 import java.io.IOException;
 
 @WebFilter(filterName = "encodingFilter", urlPatterns = "/*")
-public class EncodingFilter implements Filter { // TODO Лучше константа или initParam?
+public class EncodingFilter implements Filter {
     private static final String ENCODING = "UTF-8";
 
     @Override

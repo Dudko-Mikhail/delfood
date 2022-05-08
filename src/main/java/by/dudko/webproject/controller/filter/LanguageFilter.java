@@ -4,7 +4,7 @@ import by.dudko.webproject.controller.RequestParameter;
 import by.dudko.webproject.controller.SessionAttribute;
 import by.dudko.webproject.model.entity.Language;
 import by.dudko.webproject.util.CookieHelper;
-import by.dudko.webproject.util.LanguageProvider;
+import by.dudko.webproject.util.i18n.LanguageProvider;
 import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -17,19 +17,19 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.Optional;
 
 import static by.dudko.webproject.controller.CookieName.LOCALE_COOKIE;
 
 @WebFilter(filterName = "languageFilter", urlPatterns = "/*")
 public class LanguageFilter implements Filter {
+    private static final LanguageProvider languageProvider = LanguageProvider.getInstance();
+
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         HttpSession session = httpRequest.getSession();
         if (session.getAttribute(SessionAttribute.LANGUAGE) == null) {
-            LanguageProvider languageProvider = LanguageProvider.getInstance();
             Optional<Cookie> optionalCookie = CookieHelper.findCookieByName(LOCALE_COOKIE, httpRequest);
             Cookie localeCookie = optionalCookie.orElseGet(() -> {
                 Cookie cookie = new Cookie(LOCALE_COOKIE, LanguageProvider.DEFAULT_LANGUAGE.getName());
@@ -39,11 +39,6 @@ public class LanguageFilter implements Filter {
             });
             Language language = languageProvider.parseLanguage(localeCookie.getValue());
             session.setAttribute(SessionAttribute.LANGUAGE, language);
-        }
-
-        if (session.getAttribute(SessionAttribute.LANGUAGES) == null) {
-            List<String> languages = LanguageProvider.getInstance().getAvailableLanguageNames();
-            session.setAttribute(SessionAttribute.LANGUAGES, languages);
         }
 
         if (isLanguageChanged(httpRequest)) {
@@ -59,8 +54,8 @@ public class LanguageFilter implements Filter {
             return false;
         }
         HttpSession session = request.getSession();
-        Language sessionLanguage = (Language) session.getAttribute(SessionAttribute.LANGUAGE);
-        return !languageParameter.equals(sessionLanguage.getName());
+        Language language = (Language) session.getAttribute(SessionAttribute.LANGUAGE);
+        return !languageParameter.equals(language.getName());
     }
 
     private void updateLocaleCookie(HttpServletRequest request, HttpServletResponse response) {
