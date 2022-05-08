@@ -47,7 +47,7 @@ public class UserDaoImpl implements UserDao {
             """;
     private static final String CREATE_USER = """
             INSERT INTO users (role_id, status, email, login, password, phone_number, first_name, last_name)
-            values (?, ?, ?, ?, ?, ?, ?, ?)
+            values ((SELECT role_id FROM user_roles WHERE name = ?), ?, ?, ?, ?, ?, ?, ?)
             """;
     private static final String UPDATE_USER_STATUS = """
             UPDATE users
@@ -142,7 +142,7 @@ public class UserDaoImpl implements UserDao {
     public boolean create(User user) throws DaoException {
         try (var connection = pool.takeConnection();
              var preparedStatement = connection.prepareStatement(CREATE_USER)) {
-            preparedStatement.setInt(1, user.getRole().ordinal() + 1);
+            preparedStatement.setString(1, user.getRole().toString());
             preparedStatement.setString(2, user.getStatus().toString());
             preparedStatement.setString(3, user.getEmail());
             preparedStatement.setString(4, user.getLogin());

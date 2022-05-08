@@ -19,6 +19,7 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
     private static final UserServiceImpl INSTANCE = new UserServiceImpl();
     private final UserDao userDao = UserDaoImpl.getInstance();
+
     public static UserServiceImpl getInstance() {
         return INSTANCE;
     }
@@ -27,7 +28,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Map<String, String> signUp(Map<String, String> userData) throws ServiceException { // FIXME После окончания того как доделаю валидацию
+    public Map<String, String> signUp(Map<String, String> userData) throws ServiceException { // FIXME После окончания того как доделаю валидацию. Rename singUpUser
         UserValidator validator = UserValidator.getInstance();
         Map<String, String> validationReport = validator.validate(userData);
         String login = userData.get(RequestParameter.LOGIN);
@@ -70,6 +71,20 @@ public class UserServiceImpl implements UserService {
             }
             String encryptedPassword = optionalUser.get().getPassword();
             return encryptor.matchPassword(password, encryptedPassword) ? optionalUser : Optional.empty();
+        } catch (DaoException e) {
+            throw new ServiceException("Failed to sign in user", e);
+        }
+    }
+
+    @Override
+    public Optional<User> signInByVerificationCode(String login, String verificationCode) throws ServiceException {
+        try {
+            Optional<User> optionalUser = userDao.findUserByLoginOrEmail(login);
+            if (optionalUser.isEmpty()) {
+                return Optional.empty();
+            }
+            User user = optionalUser.get();
+            return matchUserVerificationCode(user, verificationCode) ? optionalUser : Optional.empty();
         } catch (DaoException e) {
             throw new ServiceException("Failed to sign in user", e);
         }

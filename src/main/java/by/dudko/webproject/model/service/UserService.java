@@ -9,7 +9,9 @@ import java.util.Optional;
 public interface UserService {
     Map<String, String> signUp(Map<String, String> userData) throws ServiceException;
 
-    Optional<User> signIn(String login, String password) throws ServiceException;
+    Optional<User> signIn(String loginEmail, String password) throws ServiceException;
+
+    Optional<User> signInByVerificationCode(String login, String verificationCode) throws ServiceException;
 
     Optional<User> findUserByLogin(String login) throws ServiceException;
 
