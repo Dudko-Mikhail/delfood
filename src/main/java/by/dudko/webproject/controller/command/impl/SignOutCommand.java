@@ -12,6 +12,6 @@ public class SignOutCommand implements Command {
     public Router execute(HttpServletRequest request) throws CommandException {
         HttpSession session = request.getSession();
         session.invalidate();
-        return new Router(Router.RouteType.REDIRECT, PagePath.HOME_PAGE);
+        return new Router(Router.RouteType.REDIRECT, PagePath.INDEX_PAGE);
     }
 }
