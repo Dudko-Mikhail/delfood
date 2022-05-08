@@ -1,5 +1,6 @@
 package by.dudko.webproject.controller.ajax;
 
+import by.dudko.webproject.controller.RequestParameter;
 import by.dudko.webproject.controller.ajax.command.ActionCommand;
 import by.dudko.webproject.controller.ajax.command.AjaxCommandType;
 import by.dudko.webproject.exception.CommandException;
@@ -29,8 +30,8 @@ public class AjaxController extends HttpServlet {
     }
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String commandText = request.getParameter("command");
-        Optional<ActionCommand> command = AjaxCommandType.parseCommand(commandText);
+        String commandName = request.getParameter(RequestParameter.COMMAND);
+        Optional<ActionCommand> command = AjaxCommandType.parseCommand(commandName);
         if (command.isEmpty()) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST);
             return;
