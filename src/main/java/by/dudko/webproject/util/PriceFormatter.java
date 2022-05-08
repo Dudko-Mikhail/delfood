@@ -6,7 +6,7 @@ import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.util.Locale;
 
-public class PriceFormatter { // TODO может и не нужен
+public class PriceFormatter {
     private PriceFormatter() {
     }
 

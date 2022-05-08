@@ -2,6 +2,7 @@ package by.dudko.webproject.util;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
@@ -24,6 +25,15 @@ public final class CookieHelper {
             i++;
         }
         return Optional.ofNullable(cookie);
+    }
+
+    public static void removeCookie(HttpServletRequest request, HttpServletResponse response, String cookieName) {
+        Optional<Cookie> optionalCookie = findCookieByName(cookieName, request);
+        if (optionalCookie.isPresent()) {
+            Cookie cookie = optionalCookie.get();
+            cookie.setMaxAge(0);
+            response.addCookie(cookie);
+        }
     }
 
     private CookieHelper() {}
